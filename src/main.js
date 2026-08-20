@@ -120,6 +120,7 @@ function loop() {
 
 async function start() {
   await world.buildSlides(slides);
+  onResize();
   goTo(0, { first: true });
   loop();
   requestAnimationFrame(() => els.loader.classList.add('hide'));
