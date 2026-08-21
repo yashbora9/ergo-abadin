@@ -16,6 +16,7 @@
       <canvas id="gl"></canvas>
       <div class="vignette"></div>
       <div class="grain"></div>
+      <div class="focus-veil" id="focusVeil"></div>
 
       <header class="chrome">
         <div class="wordmark">ERGO <span>ABEDIN</span></div>
@@ -32,7 +33,7 @@
         <div class="facts" id="facts"></div>
       </main>
 
-      <p class="hint" id="hint">Scroll <em>or arrows</em></p>
+      <p class="hint" id="hint">Scroll</p>
 
       <nav class="progress">
         <div class="bar"><i id="fill"></i></div>
@@ -45,6 +46,11 @@
       <button class="nav-btn next" id="next" aria-label="Next">
         <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.4"/></svg>
       </button>
+
+      <div class="cursor" id="cursor" hidden>
+        <i></i>
+        <b></b>
+      </div>
 
       <div class="loader" id="loader">
         <div class="loader-inner">

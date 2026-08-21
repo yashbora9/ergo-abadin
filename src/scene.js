@@ -266,6 +266,26 @@ export function createWorld(canvas) {
   const particles = new THREE.Points(pGeo, pMat);
   scene.add(particles);
 
+  const dustN = 56;
+  const dustPos = new Float32Array(dustN * 3);
+  const dustLife = new Float32Array(dustN);
+  let dustHead = 0;
+  const dustGeo = new THREE.BufferGeometry();
+  dustGeo.setAttribute('position', new THREE.BufferAttribute(dustPos, 3));
+  const dustMat = new THREE.PointsMaterial({
+    color: ACCENT,
+    size: 0.05,
+    transparent: true,
+    opacity: 0.7,
+    depthWrite: false,
+    sizeAttenuation: true,
+  });
+  const dust = new THREE.Points(dustGeo, dustMat);
+  scene.add(dust);
+  const dustAt = new THREE.Vector3();
+  let lastPx = 0;
+  let lastPy = 0;
+
   function makeTrail(color) {
     const geo = new THREE.BufferGeometry();
     const n = 90;
@@ -358,6 +378,8 @@ export function createWorld(canvas) {
 
   let current = -1;
   let hover = null;
+  let focused = null;
+  let focusBusy = false;
   const pointer = new THREE.Vector2(0, 0);
   let pointerLive = false;
   const raycaster = new THREE.Raycaster();
@@ -468,6 +490,7 @@ export function createWorld(canvas) {
   }
 
   function setSlide(index, { reduced = false } = {}) {
+    if (focused) closeFocus({ instant: true });
     if (index === current) return;
     const prev = current;
     hover = null;
@@ -475,6 +498,126 @@ export function createWorld(canvas) {
     current = index;
     const g = slideGroups[index];
     if (g) fadeGroup(g, true, reduced ? 0 : 0.25);
+  }
+
+  function pickMesh() {
+    const g = slideGroups[current];
+    if (!g) return null;
+    raycaster.setFromCamera(pointer, camera);
+    const hits = raycaster.intersectObjects(g.children, true);
+    if (!hits.length) return null;
+    const parent = hits[0].object.parent;
+    return parent && parent.userData.mat ? parent : null;
+  }
+
+  function openFocus(mesh, reduced = false) {
+    if (!mesh || focusBusy) return;
+    if (focused === mesh) {
+      closeFocus();
+      return;
+    }
+    if (focused) closeFocus({ instant: true });
+    focused = mesh;
+    focusBusy = true;
+    mesh.userData.locked = true;
+    document.getElementById('app')?.classList.add('is-focus');
+    document.getElementById('hud')?.classList.add('dim');
+    scene.fog = null;
+    const rest = mesh.userData.rest || { x: 0, y: 0, z: 0, ry: 0 };
+    const heroX = mobile ? 0.1 : 0.85;
+    const heroY = mobile ? 1.0 : 0.28;
+    const heroZ = rest.z + (mobile ? 0.55 : 0.9);
+    const heroScale = mobile ? 1.45 : 1.65;
+    dimOthers(mesh);
+    const g = slideGroups[current];
+    if (g) {
+      g.children.forEach((m) => {
+        if (m === mesh) return;
+        gsap.to(m.position, { z: (m.userData.rest?.z || 0) - 1.4, duration: 0.7, ease: 'power2.inOut' });
+      });
+    }
+    const dur = reduced ? 0.01 : 0.42;
+    const tl = gsap.timeline({
+      onComplete: () => {
+        focusBusy = false;
+      },
+    });
+    tl.to(mesh.rotation, { y: rest.ry + Math.PI * 0.52, x: 0, duration: dur, ease: 'power2.in' }, 0);
+    tl.to(mesh.scale, { x: 0.35, y: 1.12, z: 1, duration: dur, ease: 'power2.in' }, 0);
+    tl.to(mesh.position, { z: rest.z + 0.6, duration: dur, ease: 'power2.in' }, 0);
+    tl.to(mesh.rotation, { y: 0, x: 0, duration: 0.7, ease: 'power3.out' });
+    tl.to(
+      mesh.position,
+      { x: heroX, y: heroY, z: heroZ, duration: 0.7, ease: 'back.out(1.4)' },
+      '<',
+    );
+    tl.to(
+      mesh.scale,
+      { x: heroScale, y: heroScale, z: 1, duration: 0.7, ease: 'back.out(1.6)' },
+      '<',
+    );
+    if (mesh.userData.glow) {
+      tl.to(mesh.userData.glow.material, { opacity: 0, duration: 0.2 }, '<');
+    }
+    if (mesh.userData.mat) {
+      mesh.userData.mat.toneMapped = false;
+      gsap.to(mesh.userData.mat, { opacity: 1, duration: 0.2 });
+    }
+    if (mesh.userData.frame) {
+      gsap.to(mesh.userData.frame.material, { emissiveIntensity: 0.06, duration: 0.3 });
+    }
+  }
+
+  function closeFocus({ instant = false } = {}) {
+    const mesh = focused;
+    if (!mesh) return false;
+    focused = null;
+    focusBusy = !instant;
+    document.getElementById('app')?.classList.remove('is-focus');
+    document.getElementById('hud')?.classList.remove('dim');
+    scene.fog = new THREE.Fog(CREAM, 22, 48);
+    const rest = mesh.userData.rest || { x: 0, y: 0, z: 0, ry: 0 };
+    gsap.killTweensOf(mesh.position);
+    gsap.killTweensOf(mesh.rotation);
+    gsap.killTweensOf(mesh.scale);
+    const dur = instant || window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 0.01 : 0.55;
+    gsap.to(mesh.position, { x: rest.x, y: rest.y, z: rest.z, duration: dur, ease: 'power3.inOut' });
+    gsap.to(mesh.rotation, { x: 0, y: rest.ry, duration: dur, ease: 'power3.inOut' });
+    gsap.to(mesh.scale, {
+      x: 1,
+      y: 1,
+      z: 1,
+      duration: dur,
+      ease: 'power3.inOut',
+      onComplete: () => {
+        mesh.userData.locked = false;
+        focusBusy = false;
+      },
+    });
+    if (mesh.userData.glow) gsap.to(mesh.userData.glow.material, { opacity: 0.16, duration: dur });
+    if (mesh.userData.frame) {
+      gsap.to(mesh.userData.frame.material, { emissiveIntensity: 0.28, duration: dur });
+    }
+    dimOthers(null);
+    const g = slideGroups[current];
+    if (g) {
+      g.children.forEach((m) => {
+        if (m === mesh || !m.userData.rest) return;
+        gsap.to(m.position, { z: m.userData.rest.z, duration: dur, ease: 'power2.out' });
+      });
+    }
+    return true;
+  }
+
+  function onClick() {
+    if (focusBusy) return;
+    const mesh = pickMesh();
+    if (focused) {
+      if (!mesh || mesh === focused) closeFocus();
+      else openFocus(mesh);
+      return;
+    }
+    if (mesh) openFocus(mesh);
   }
 
   function setPointer(x, y) {
@@ -529,53 +672,87 @@ export function createWorld(canvas) {
   }
 
   function tick(t, reduced) {
+    const px = pointerLive ? pointer.x : 0;
+    const py = pointerLive ? pointer.y : 0;
+
     if (!reduced) {
       particles.rotation.y = t * 0.012;
+      particles.position.x = THREE.MathUtils.lerp(particles.position.x, px * 0.42, 0.06);
+      particles.position.y = THREE.MathUtils.lerp(particles.position.y, py * 0.18, 0.06);
       const arr = pGeo.attributes.position.array;
       for (let i = 0; i < count; i++) {
         arr[i * 3 + 1] += Math.sin(t * speeds[i] + i) * 0.0012;
       }
       pGeo.attributes.position.needsUpdate = true;
+
+      if (!mobile && pointerLive && (Math.abs(px - lastPx) > 0.004 || Math.abs(py - lastPy) > 0.004)) {
+        raycaster.setFromCamera(pointer, camera);
+        raycaster.ray.at(7.1, dustAt);
+        for (let n = 0; n < 2; n++) {
+          const i = dustHead++ % dustN;
+          dustPos[i * 3] = dustAt.x + (Math.random() - 0.5) * 0.18;
+          dustPos[i * 3 + 1] = dustAt.y + (Math.random() - 0.5) * 0.18;
+          dustPos[i * 3 + 2] = dustAt.z + (Math.random() - 0.5) * 0.18;
+          dustLife[i] = 1;
+        }
+        lastPx = px;
+        lastPy = py;
+      }
+      let liveDust = 0;
+      for (let i = 0; i < dustN; i++) {
+        if (dustLife[i] <= 0) {
+          dustPos[i * 3 + 1] = -40;
+          continue;
+        }
+        dustLife[i] -= 0.018;
+        dustPos[i * 3 + 1] += 0.01;
+        dustPos[i * 3] += px * 0.002;
+        liveDust += dustLife[i];
+      }
+      dustGeo.attributes.position.needsUpdate = true;
+      dustMat.opacity = Math.min(0.75, liveDust * 0.04);
+    } else {
+      dustMat.opacity = 0;
     }
 
     const g = slideGroups[current];
-    if (g) {
-      g.children.forEach((m) => {
-        const rest = m.userData.rest;
-        if (!rest) return;
-        const ph = m.userData.phase || 0;
-        if (!reduced) {
-          m.position.y = rest.y + Math.sin(t * 0.7 + ph) * 0.06;
-          m.rotation.y = rest.ry + Math.sin(t * 0.35 + ph) * 0.03;
-        }
-      });
-    }
-
     raycaster.setFromCamera(pointer, camera);
     const hits = g ? raycaster.intersectObjects(g.children, true) : [];
     const next =
       hits.length && hits[0].object.parent && hits[0].object.parent.userData.mat
         ? hits[0].object.parent
         : null;
-    if (hover !== next) {
+    if (!focused && hover !== next) {
       if (hover) gsap.to(hover.scale, { x: 1, y: 1, z: 1, duration: 0.45, ease: 'power2.out' });
       hover = next;
       dimOthers(hover);
-      if (hover) gsap.to(hover.scale, { x: 1.045, y: 1.045, z: 1.045, duration: 0.45, ease: 'power2.out' });
-    }
-    if (hover) {
-      hover.rotation.x = THREE.MathUtils.lerp(hover.rotation.x, pointer.y * 0.12, 0.08);
-      hover.rotation.y = THREE.MathUtils.lerp(
-        hover.rotation.y,
-        (hover.userData.rest?.ry || 0) + pointer.x * 0.18,
-        0.08,
-      );
+      if (hover) gsap.to(hover.scale, { x: 1.06, y: 1.06, z: 1.06, duration: 0.45, ease: 'power2.out' });
     }
 
-    const px = pointerLive ? pointer.x : 0;
-    const py = pointerLive ? pointer.y : 0;
-    camera.lookAt(look.x + px * 0.12, look.y + py * 0.06, look.z);
-    if (composer && useBloom && !reduced) composer.render();
+    if (g) {
+      g.children.forEach((m) => {
+        const rest = m.userData.rest;
+        if (!rest || m.userData.locked) return;
+        const ph = m.userData.phase || 0;
+        const depth = THREE.MathUtils.clamp(0.05 + (rest.z + 1.2) * 0.1, 0.04, 0.28);
+        const mag = !reduced && m === hover ? 1 : 0;
+        const idle = reduced ? 0 : Math.sin(t * 0.7 + ph) * 0.05;
+        const tx = rest.x + px * depth + mag * px * 0.38;
+        const ty = rest.y + idle + py * depth * 0.75 + mag * py * 0.26;
+        const tz = rest.z + mag * 0.22;
+        const ease = mag ? 0.14 : 0.08;
+        m.position.x = THREE.MathUtils.lerp(m.position.x, tx, ease);
+        m.position.y = THREE.MathUtils.lerp(m.position.y, ty, ease);
+        m.position.z = THREE.MathUtils.lerp(m.position.z, tz, ease);
+        const rx = mag ? py * 0.24 : py * 0.03;
+        const ry = rest.ry + (reduced ? 0 : Math.sin(t * 0.35 + ph) * 0.025) + (mag ? px * 0.32 : px * 0.05);
+        m.rotation.x = THREE.MathUtils.lerp(m.rotation.x, rx, 0.1);
+        m.rotation.y = THREE.MathUtils.lerp(m.rotation.y, ry, 0.1);
+      });
+    }
+
+    camera.lookAt(look.x + px * 0.16, look.y + py * 0.08, look.z);
+    if (composer && useBloom && !reduced && !focused) composer.render();
     else renderer.render(scene, camera);
   }
 
@@ -592,5 +769,9 @@ export function createWorld(canvas) {
     resize,
     tick,
     burstTrail,
+    onClick,
+    closeFocus,
+    isFocused: () => !!focused,
+    isHovering: () => !!hover || !!focused,
   };
 }

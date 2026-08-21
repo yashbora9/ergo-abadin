@@ -1,4 +1,4 @@
-export function createNav({ total, onGo, getIndex, onSection }) {
+export function createNav({ total, onGo, getIndex, onSection, onEscape }) {
   let locked = false;
   let wheelAcc = 0;
   let touchY = null;
@@ -28,6 +28,10 @@ export function createNav({ total, onGo, getIndex, onSection }) {
   }
 
   function onKey(e) {
+    if (e.key === 'Escape' && onEscape?.()) {
+      e.preventDefault();
+      return;
+    }
     if (['ArrowRight', 'ArrowDown', 'PageDown', ' '].includes(e.key)) {
       e.preventDefault();
       go(1);

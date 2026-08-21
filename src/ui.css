@@ -36,6 +36,13 @@ html, body, #app {
     linear-gradient(90deg, rgba(244, 228, 212, 0.88) 0%, rgba(244, 228, 212, 0.45) 28%, transparent 52%),
     linear-gradient(180deg, transparent 48%, rgba(244, 228, 212, 0.55) 100%);
   z-index: 2;
+  transition: opacity 0.4s ease;
+}
+
+#app.is-focus .vignette,
+#app.is-focus .grain,
+#app.is-focus .focus-veil {
+  opacity: 0;
 }
 
 .grain {
@@ -104,6 +111,11 @@ html, body, #app {
   z-index: 5;
   max-width: min(620px, 48vw);
   pointer-events: none;
+  transition: opacity 0.4s ease;
+}
+
+.hud.dim {
+  opacity: 0.22;
 }
 
 .kicker {
@@ -168,18 +180,18 @@ html, body, #app {
 
 .progress {
   position: absolute;
-  left: 36px;
-  right: 36px;
-  bottom: 28px;
+  left: 84px;
+  right: 84px;
+  bottom: 32px;
   z-index: 6;
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 22px;
 }
 
 .bar {
   flex: 1;
-  height: 2px;
+  height: 1px;
   background: var(--line);
   position: relative;
   border-radius: 99px;
@@ -190,41 +202,36 @@ html, body, #app {
   position: absolute;
   inset: 0 auto 0 0;
   width: 0%;
-  background: linear-gradient(90deg, #5c1832, var(--accent), #c47a90);
-  box-shadow: 0 0 12px rgba(122, 32, 66, 0.35);
+  background: var(--accent);
 }
 
 .ticks {
   display: flex;
-  gap: 18px;
+  align-items: center;
+  gap: 9px;
+  flex-shrink: 0;
 }
 
 .ticks button {
   appearance: none;
-  background: none;
+  width: 6px;
+  height: 6px;
+  padding: 0;
   border: 0;
-  color: var(--muted);
-  font: inherit;
-  font-size: 10px;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
+  border-radius: 50%;
+  background: rgba(44, 42, 41, 0.22);
   cursor: pointer;
-  padding: 6px 0;
-  position: relative;
+  transition: transform 0.25s ease, background 0.25s ease;
+}
+
+.ticks button:hover {
+  background: var(--accent-soft);
+  transform: scale(1.35);
 }
 
 .ticks button.active {
-  color: var(--ink);
-}
-
-.ticks button.active::after {
-  content: '';
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  height: 1px;
   background: var(--accent);
+  transform: scale(1.45);
 }
 
 .nav-btn {
@@ -260,11 +267,11 @@ html, body, #app {
 
 .hint {
   position: absolute;
-  right: 36px;
-  bottom: 108px;
+  right: 84px;
+  bottom: 52px;
   z-index: 5;
-  font-size: 11px;
-  letter-spacing: 0.22em;
+  font-size: 10px;
+  letter-spacing: 0.2em;
   text-transform: uppercase;
   color: var(--muted);
   pointer-events: none;
@@ -348,8 +355,57 @@ html, body, #app {
   .hint { display: none; }
   .ticks { display: none; }
   .progress { left: 20px; right: 20px; bottom: 22px; }
+  .hint { right: 20px; bottom: 40px; }
 }
 
-@media (prefers-reduced-motion: reduce) {
+.focus-veil {
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  opacity: 0;
+  background: radial-gradient(circle at 58% 42%, rgba(122, 32, 66, 0.08), rgba(244, 228, 212, 0.58) 72%);
+  transition: opacity 0.45s ease;
+}
+
+.focus-veil.on { opacity: 1; }
+
+.cursor {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 40;
+  pointer-events: none;
+  mix-blend-mode: multiply;
+  transition: opacity 0.2s ease;
+}
+
+.cursor i,
+.cursor b {
+  position: absolute;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.cursor i {
+  width: 8px;
+  height: 8px;
+  background: var(--accent);
+}
+
+.cursor b {
+  width: 28px;
+  height: 28px;
+  border: 1.5px solid var(--accent);
+  opacity: 0.55;
+}
+
+html.cursor-on,
+html.cursor-on * {
+  cursor: none !important;
+}
+
+@media (prefers-reduced-motion: reduce), (pointer: coarse) {
   .loader-bar i { animation: none; width: 100%; transform: none; }
+  .cursor { display: none; }
 }
