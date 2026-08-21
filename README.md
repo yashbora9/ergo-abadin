@@ -1,6 +1,6 @@
-# ERGO × Abadin
+# ERGO × Abedin
 
-Full-screen interactive presentation for the recruiting conversation with Abadin.
+Full-screen interactive presentation for Abedin to present to prospective business partners.
 
 Dark premium theme, Three.js photo planes, camera fly-throughs, scroll / arrows / swipe.
 
@@ -16,4 +16,4 @@ npm run dev
 
 https://yashbora9.github.io/ergo-abadin/
 
-Keys: `←` `→` · Scroll · Swipe · `F` fullscreen
+Keys: `←` `→` · Scroll · Swipe · `F` fullscreen · `1`–`6` jump sections

@@ -49,7 +49,7 @@ export function createNav({ total, onGo, getIndex, onSection }) {
     } else if (e.key === 'f' || e.key === 'F') {
       if (!document.fullscreenElement) document.documentElement.requestFullscreen?.();
       else document.exitFullscreen?.();
-    } else if (/^[1-7]$/.test(e.key) && onSection) {
+    } else if (/^[1-9]$/.test(e.key) && onSection) {
       e.preventDefault();
       onSection(Number(e.key) - 1);
     }

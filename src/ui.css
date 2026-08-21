@@ -117,10 +117,12 @@ html, body, #app {
 .title {
   font-family: Syne, sans-serif;
   font-weight: 700;
-  font-size: clamp(2.1rem, 4.8vw, 4.5rem);
-  line-height: 1.02;
-  letter-spacing: -0.03em;
-  max-width: 14ch;
+  font-size: clamp(2.4rem, 5.6vw, 5.1rem);
+  line-height: 1.08;
+  letter-spacing: -0.035em;
+  max-width: 12ch;
+  white-space: pre-line;
+  text-wrap: balance;
   text-wrap: balance;
 }
 
@@ -333,7 +335,7 @@ html, body, #app {
     bottom: 84px;
     max-width: none;
   }
-  .title { max-width: 11ch; font-size: clamp(2rem, 10vw, 3.1rem); }
+  .title { max-width: 12ch; font-size: clamp(2.15rem, 10.5vw, 3.35rem); }
   .facts { gap: 16px; margin-top: 16px; }
   .count { letter-spacing: 0.12em; }
   .vignette {

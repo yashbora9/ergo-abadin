@@ -118,37 +118,67 @@ function makePhotoMesh(tex, w, h) {
 }
 
 function makeCard({ label, sub = '', kicker = '' }) {
-  const w = 1.88;
-  const h = 2.42;
+  const w = 2.2;
+  const h = 2.85;
+  const W = 1024;
+  const H = 1328;
   const canvas = document.createElement('canvas');
-  canvas.width = 1024;
-  canvas.height = 1350;
+  canvas.width = W;
+  canvas.height = H;
   const ctx = canvas.getContext('2d');
   ctx.fillStyle = '#0a1420';
-  ctx.fillRect(0, 0, 1024, 1350);
-  const g = ctx.createLinearGradient(0, 40, 900, 1350);
-  g.addColorStop(0, 'rgba(0,84,166,0.72)');
-  g.addColorStop(0.45, 'rgba(12,28,48,0.35)');
-  g.addColorStop(1, 'rgba(8,16,28,0.15)');
+  ctx.fillRect(0, 0, W, H);
+  const g = ctx.createLinearGradient(0, 0, W, H);
+  g.addColorStop(0, 'rgba(0,84,166,0.78)');
+  g.addColorStop(0.5, 'rgba(10,24,42,0.4)');
+  g.addColorStop(1, 'rgba(8,16,28,0.2)');
   ctx.fillStyle = g;
-  ctx.fillRect(0, 0, 1024, 1350);
-  ctx.strokeStyle = 'rgba(190, 220, 245, 0.78)';
-  ctx.lineWidth = 6;
-  ctx.strokeRect(36, 36, 952, 1278);
-  ctx.fillStyle = 'rgba(180, 214, 242, 0.88)';
-  ctx.font = '600 28px Manrope, system-ui, sans-serif';
-  if (kicker) ctx.fillText(kicker.toUpperCase(), 88, 180);
-  ctx.fillStyle = '#ffffff';
-  ctx.font = '700 86px Syne, sans-serif';
-  const words = String(label).split(' ');
-  words.forEach((word, i) => ctx.fillText(word, 88, 360 + i * 100));
-  if (sub) {
-    ctx.fillStyle = 'rgba(220, 232, 244, 0.78)';
-    ctx.font = '500 36px Manrope, system-ui, sans-serif';
-    const lines = wrapText(ctx, sub, 820);
-    const startY = 360 + words.length * 100 + 48;
-    lines.forEach((line, i) => ctx.fillText(line, 88, startY + i * 50));
+  ctx.fillRect(0, 0, W, H);
+  ctx.strokeStyle = 'rgba(200, 226, 248, 0.85)';
+  ctx.lineWidth = 7;
+  ctx.strokeRect(40, 40, W - 80, H - 80);
+
+  const pad = 96;
+  let y = 150;
+  ctx.textBaseline = 'top';
+
+  if (kicker) {
+    ctx.fillStyle = 'rgba(176, 214, 244, 0.95)';
+    ctx.font = '700 34px Manrope, system-ui, sans-serif';
+    ctx.letterSpacing = '6px';
+    ctx.fillText(String(kicker).toUpperCase(), pad, y);
+    ctx.letterSpacing = '0px';
+    y += 78;
   }
+
+  ctx.fillStyle = '#ffffff';
+  const labelSize = String(label).length > 11 ? 84 : 108;
+  ctx.font = `700 ${labelSize}px Syne, sans-serif`;
+  const labelLines = wrapText(ctx, String(label), W - pad * 2);
+  labelLines.forEach((line) => {
+    ctx.fillText(line, pad, y);
+    y += labelSize + 14;
+  });
+
+  y += 28;
+  ctx.strokeStyle = 'rgba(142, 192, 239, 0.55)';
+  ctx.lineWidth = 3;
+  ctx.beginPath();
+  ctx.moveTo(pad, y);
+  ctx.lineTo(pad + 160, y);
+  ctx.stroke();
+  y += 44;
+
+  if (sub) {
+    ctx.fillStyle = 'rgba(232, 240, 248, 0.92)';
+    ctx.font = '600 48px Manrope, system-ui, sans-serif';
+    const subLines = wrapText(ctx, sub, W - pad * 2);
+    subLines.forEach((line) => {
+      ctx.fillText(line, pad, y);
+      y += 64;
+    });
+  }
+
   const tex = new THREE.CanvasTexture(canvas);
   tex.colorSpace = THREE.SRGBColorSpace;
   tex.anisotropy = 8;
