@@ -4,9 +4,9 @@ import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
 import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
 import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
 
-const BLUE = 0x0054a6;
-const DARK = 0x05070b;
-const WARM = 0xc9b48a;
+const ACCENT = 0x7a2042;
+const CREAM = 0xf4e4d4;
+const WARM = 0xc4a08a;
 
 function roundedShape(w, h, r) {
   const s = new THREE.Shape();
@@ -65,9 +65,9 @@ function makePhotoMesh(tex, w, h) {
   const frame = new THREE.Mesh(
     frameGeo,
     new THREE.MeshStandardMaterial({
-      color: 0x0a1624,
-      emissive: BLUE,
-      emissiveIntensity: 0.62,
+      color: 0xf7efe6,
+      emissive: ACCENT,
+      emissiveIntensity: 0.28,
       metalness: 0.35,
       roughness: 0.38,
     }),
@@ -88,7 +88,7 @@ function makePhotoMesh(tex, w, h) {
   const glow = new THREE.Mesh(
     new THREE.PlaneGeometry(w * 1.12, h * 1.12),
     new THREE.MeshBasicMaterial({
-      color: BLUE,
+      color: ACCENT,
       transparent: true,
       opacity: 0,
       depthWrite: false,
@@ -126,15 +126,15 @@ function makeCard({ label, sub = '', kicker = '' }) {
   canvas.width = W;
   canvas.height = H;
   const ctx = canvas.getContext('2d');
-  ctx.fillStyle = '#0a1420';
+  ctx.fillStyle = '#f7efe6';
   ctx.fillRect(0, 0, W, H);
   const g = ctx.createLinearGradient(0, 0, W, H);
-  g.addColorStop(0, 'rgba(0,84,166,0.78)');
-  g.addColorStop(0.5, 'rgba(10,24,42,0.4)');
-  g.addColorStop(1, 'rgba(8,16,28,0.2)');
+  g.addColorStop(0, 'rgba(122,32,66,0.16)');
+  g.addColorStop(0.5, 'rgba(247,239,230,0.4)');
+  g.addColorStop(1, 'rgba(244,228,212,0.2)');
   ctx.fillStyle = g;
   ctx.fillRect(0, 0, W, H);
-  ctx.strokeStyle = 'rgba(200, 226, 248, 0.85)';
+  ctx.strokeStyle = 'rgba(122, 32, 66, 0.72)';
   ctx.lineWidth = 7;
   ctx.strokeRect(40, 40, W - 80, H - 80);
 
@@ -143,7 +143,7 @@ function makeCard({ label, sub = '', kicker = '' }) {
   ctx.textBaseline = 'top';
 
   if (kicker) {
-    ctx.fillStyle = 'rgba(176, 214, 244, 0.95)';
+    ctx.fillStyle = 'rgba(122, 32, 66, 0.88)';
     ctx.font = '700 34px Manrope, system-ui, sans-serif';
     ctx.letterSpacing = '6px';
     ctx.fillText(String(kicker).toUpperCase(), pad, y);
@@ -151,7 +151,7 @@ function makeCard({ label, sub = '', kicker = '' }) {
     y += 78;
   }
 
-  ctx.fillStyle = '#ffffff';
+  ctx.fillStyle = '#7a2042';
   const labelSize = String(label).length > 11 ? 84 : 108;
   ctx.font = `700 ${labelSize}px Syne, sans-serif`;
   const labelLines = wrapText(ctx, String(label), W - pad * 2);
@@ -161,7 +161,7 @@ function makeCard({ label, sub = '', kicker = '' }) {
   });
 
   y += 28;
-  ctx.strokeStyle = 'rgba(142, 192, 239, 0.55)';
+  ctx.strokeStyle = 'rgba(122, 32, 66, 0.45)';
   ctx.lineWidth = 3;
   ctx.beginPath();
   ctx.moveTo(pad, y);
@@ -170,7 +170,7 @@ function makeCard({ label, sub = '', kicker = '' }) {
   y += 44;
 
   if (sub) {
-    ctx.fillStyle = 'rgba(232, 240, 248, 0.92)';
+    ctx.fillStyle = 'rgba(44, 42, 41, 0.82)';
     ctx.font = '600 48px Manrope, system-ui, sans-serif';
     const subLines = wrapText(ctx, sub, W - pad * 2);
     subLines.forEach((line) => {
@@ -209,35 +209,35 @@ export function createWorld(canvas) {
     alpha: false,
     powerPreference: 'high-performance',
   });
-  renderer.setClearColor(DARK, 1);
+  renderer.setClearColor(CREAM, 1);
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.75));
   renderer.outputColorSpace = THREE.SRGBColorSpace;
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
-  renderer.toneMappingExposure = 1.22;
+  renderer.toneMappingExposure = 1.05;
 
   const scene = new THREE.Scene();
-  scene.fog = new THREE.Fog(DARK, 16, 40);
+  scene.fog = new THREE.Fog(CREAM, 22, 48);
 
   const camera = new THREE.PerspectiveCamera(38, 1, 0.1, 80);
   camera.position.set(0, 0.3, 8.6);
 
   const look = new THREE.Vector3(0, 0.15, 0);
 
-  scene.add(new THREE.AmbientLight(0x9bb4cc, 0.38));
+  scene.add(new THREE.AmbientLight(0xf3e6d8, 0.72));
 
   const key = new THREE.DirectionalLight(0xffffff, 1.12);
   key.position.set(4.5, 6, 8);
   scene.add(key);
 
-  const rim = new THREE.DirectionalLight(BLUE, 1.5);
+  const rim = new THREE.DirectionalLight(ACCENT, 0.85);
   rim.position.set(-6, 2, -4);
   scene.add(rim);
 
-  const fill = new THREE.PointLight(BLUE, 9, 28, 2);
+  const fill = new THREE.PointLight(ACCENT, 4.5, 28, 2);
   fill.position.set(0, 1.2, 4);
   scene.add(fill);
 
-  const groundGlow = new THREE.PointLight(0x1a3a66, 4.4, 18, 2);
+  const groundGlow = new THREE.PointLight(0xc9a58a, 3.2, 18, 2);
   groundGlow.position.set(0, -3, 2);
   scene.add(groundGlow);
 
@@ -255,12 +255,12 @@ export function createWorld(canvas) {
   const pGeo = new THREE.BufferGeometry();
   pGeo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
   const pMat = new THREE.PointsMaterial({
-    color: 0xb7d4f0,
+    color: 0xc4a08a,
     size: mobile ? 0.028 : 0.022,
     transparent: true,
-    opacity: 0.55,
+    opacity: 0.32,
     depthWrite: false,
-    blending: THREE.AdditiveBlending,
+    blending: THREE.NormalBlending,
     sizeAttenuation: true,
   });
   const particles = new THREE.Points(pGeo, pMat);
@@ -282,7 +282,7 @@ export function createWorld(canvas) {
     scene.add(line);
     return { geo, mat, pos, n, line };
   }
-  const trailA = makeTrail(BLUE);
+  const trailA = makeTrail(ACCENT);
   const trailB = makeTrail(WARM);
 
   const loader = new THREE.TextureLoader();
@@ -322,7 +322,7 @@ export function createWorld(canvas) {
     }
     composer = new EffectComposer(renderer);
     composer.addPass(new RenderPass(scene, camera));
-    bloomPass = new UnrealBloomPass(new THREE.Vector2(w, h), 0.28, 0.42, 0.86);
+    bloomPass = new UnrealBloomPass(new THREE.Vector2(w, h), 0.08, 0.3, 0.92);
     composer.addPass(bloomPass);
   }
 
@@ -518,7 +518,7 @@ export function createWorld(canvas) {
       if (m.userData.mat) gsap.to(m.userData.mat, { opacity: on ? 1 : 0.32, duration: 0.35 });
       if (m.userData.frame) {
         gsap.to(m.userData.frame.material, {
-          emissiveIntensity: on ? 0.62 : 0.12,
+          emissiveIntensity: on ? 0.28 : 0.08,
           duration: 0.35,
         });
       }

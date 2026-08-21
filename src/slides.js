@@ -53,8 +53,8 @@ export const slides = [
       { v: 'Plan', k: 'City first, then expand' },
     ],
     photos: [
-      { src: p('photos/abedin/before.jpg'), w: 3.2, h: 2.34, x: 2.05, y: 0.95, z: -0.75, ry: 0.1 },
-      { src: p('photos/abedin/city.jpg'), w: 2.2, h: 2.94, x: 4.35, y: 0.35, z: -0.15, ry: -0.12 },
+      { src: p('photos/abedin/before.jpg'), w: 2.9, h: 2.12, x: 1.95, y: 0.95, z: -0.75, ry: 0.1 },
+      { src: p('photos/abedin/roundabout.jpg'), w: 3.55, h: 2.22, x: 4.5, y: 0.4, z: -0.12, ry: -0.12 },
     ],
     cam: { x: -0.35, y: 0.22, z: 8.5, tx: 2.35, ty: 0.35, tz: 0 },
     trail: false,

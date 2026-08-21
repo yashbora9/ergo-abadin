@@ -1,10 +1,11 @@
 :root {
-  --bg: #05070b;
-  --blue: #0054a6;
-  --blue-soft: #6ea4d8;
-  --ink: #f4f7fb;
-  --muted: rgba(244, 247, 251, 0.58);
-  --line: rgba(255, 255, 255, 0.12);
+  --bg: #f4e4d4;
+  --accent: #7a2042;
+  --accent-soft: #a34a66;
+  --ink: #2c2a29;
+  --muted: rgba(44, 42, 41, 0.58);
+  --line: rgba(122, 32, 66, 0.18);
+  --cream: #fbf1e6;
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -31,9 +32,9 @@ html, body, #app {
   position: absolute;
   inset: 0;
   background:
-    radial-gradient(120% 90% at 72% 38%, transparent 18%, rgba(5, 7, 11, 0.28) 68%, rgba(5, 7, 11, 0.8) 100%),
-    linear-gradient(90deg, rgba(5, 7, 11, 0.78) 0%, rgba(5, 7, 11, 0.42) 26%, transparent 50%),
-    linear-gradient(180deg, transparent 42%, rgba(5, 7, 11, 0.38) 100%);
+    radial-gradient(120% 90% at 72% 38%, transparent 22%, rgba(244, 228, 212, 0.18) 70%, rgba(244, 228, 212, 0.72) 100%),
+    linear-gradient(90deg, rgba(244, 228, 212, 0.88) 0%, rgba(244, 228, 212, 0.45) 28%, transparent 52%),
+    linear-gradient(180deg, transparent 48%, rgba(244, 228, 212, 0.55) 100%);
   z-index: 2;
 }
 
@@ -42,8 +43,8 @@ html, body, #app {
   position: absolute;
   inset: 0;
   z-index: 3;
-  opacity: 0.07;
-  mix-blend-mode: overlay;
+  opacity: 0.04;
+  mix-blend-mode: multiply;
   background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='140' height='140'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)' opacity='.55'/></svg>");
 }
 
@@ -69,7 +70,7 @@ html, body, #app {
 }
 
 .wordmark span {
-  color: var(--blue-soft);
+  color: var(--accent);
   letter-spacing: 0.18em;
   margin-left: 10px;
   font-weight: 500;
@@ -109,7 +110,7 @@ html, body, #app {
   font-size: 11px;
   letter-spacing: 0.28em;
   text-transform: uppercase;
-  color: var(--blue-soft);
+  color: var(--accent);
   margin-bottom: 16px;
   min-height: 1em;
 }
@@ -123,7 +124,7 @@ html, body, #app {
   max-width: 12ch;
   white-space: pre-line;
   text-wrap: balance;
-  text-wrap: balance;
+  color: var(--accent);
 }
 
 .line {
@@ -142,7 +143,7 @@ html, body, #app {
 }
 
 .fact {
-  border-left: 1px solid var(--blue);
+  border-left: 1px solid var(--accent);
   padding: 0 0 0 12px;
   min-width: 0;
 }
@@ -189,8 +190,8 @@ html, body, #app {
   position: absolute;
   inset: 0 auto 0 0;
   width: 0%;
-  background: linear-gradient(90deg, #003e7a, var(--blue), #8ec0ef);
-  box-shadow: 0 0 12px rgba(0, 84, 166, 0.7);
+  background: linear-gradient(90deg, #5c1832, var(--accent), #c47a90);
+  box-shadow: 0 0 12px rgba(122, 32, 66, 0.35);
 }
 
 .ticks {
@@ -223,7 +224,7 @@ html, body, #app {
   right: 0;
   bottom: 0;
   height: 1px;
-  background: var(--blue);
+  background: var(--accent);
 }
 
 .nav-btn {
@@ -234,9 +235,9 @@ html, body, #app {
   width: 48px;
   height: 48px;
   border-radius: 50%;
-  border: 1px solid var(--line);
-  background: rgba(5, 7, 11, 0.35);
-  color: var(--ink);
+  border: 1px solid var(--accent);
+  background: rgba(251, 241, 230, 0.72);
+  color: var(--accent);
   cursor: pointer;
   backdrop-filter: blur(8px);
   display: grid;
@@ -245,8 +246,8 @@ html, body, #app {
 }
 
 .nav-btn:hover {
-  border-color: var(--blue-soft);
-  background: rgba(0, 84, 166, 0.18);
+  border-color: var(--accent);
+  background: rgba(122, 32, 66, 0.12);
 }
 
 .nav-btn.prev { left: 18px; }
@@ -315,7 +316,7 @@ html, body, #app {
 .loader-bar i {
   position: absolute;
   inset: 0;
-  background: var(--blue);
+  background: var(--accent);
   transform: translateX(-100%);
   animation: load 1.4s ease-in-out infinite;
 }
@@ -340,8 +341,8 @@ html, body, #app {
   .count { letter-spacing: 0.12em; }
   .vignette {
     background:
-      radial-gradient(140% 80% at 50% 28%, transparent 10%, rgba(5, 7, 11, 0.2) 55%, rgba(5, 7, 11, 0.88) 100%),
-      linear-gradient(180deg, transparent 40%, rgba(5, 7, 11, 0.72) 78%);
+      radial-gradient(140% 80% at 50% 28%, transparent 12%, rgba(244, 228, 212, 0.2) 55%, rgba(244, 228, 212, 0.88) 100%),
+      linear-gradient(180deg, transparent 40%, rgba(244, 228, 212, 0.78) 78%);
   }
   .nav-btn { display: none; }
   .hint { display: none; }
