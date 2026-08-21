@@ -1,9 +1,9 @@
-export function createNav({ total, onGo, getIndex }) {
+export function createNav({ total, onGo, getIndex, onSection }) {
   let locked = false;
   let wheelAcc = 0;
   let touchY = null;
 
-  function lock(ms = 1100) {
+  function lock(ms = 950) {
     locked = true;
     window.setTimeout(() => {
       locked = false;
@@ -49,6 +49,9 @@ export function createNav({ total, onGo, getIndex }) {
     } else if (e.key === 'f' || e.key === 'F') {
       if (!document.fullscreenElement) document.documentElement.requestFullscreen?.();
       else document.exitFullscreen?.();
+    } else if (/^[1-7]$/.test(e.key) && onSection) {
+      e.preventDefault();
+      onSection(Number(e.key) - 1);
     }
   }
 

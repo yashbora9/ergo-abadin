@@ -20,10 +20,10 @@ export const slides = [
     title: 'For Abadin.',
     line: 'Why ERGO. Why now.',
     photos: [
-      { src: p('photos/ergo/hq.jpg'), w: 4.4, h: 2.55, x: 3.05, y: 0.85, z: -1.2, ry: -0.16 },
-      { src: p('photos/yash/portrait.jpg'), w: 1.7, h: 2.2, x: -3.55, y: 1.15, z: 0.5, ry: 0.14 },
+      { src: p('photos/ergo/hq.jpg'), w: 4.6, h: 2.7, x: 2.85, y: 0.55, z: -1.1, ry: -0.16 },
+      { src: p('photos/yash/portrait.jpg'), w: 1.85, h: 2.35, x: 4.55, y: -0.55, z: 0.55, ry: -0.1 },
     ],
-    cam: { x: 0, y: 0.35, z: 8.6, tx: 0.15, ty: 0.2, tz: 0 },
+    cam: { x: -0.35, y: 0.32, z: 8.6, tx: 1.35, ty: 0.18, tz: 0 },
     trail: false,
   },
   {
@@ -32,23 +32,31 @@ export const slides = [
     kicker: '01  ·  Why ERGO',
     title: 'Trust at German scale.',
     line: 'A century at the top of the market.',
-    photos: [
-      { src: p('photos/ergo/hq.jpg'), w: 5.2, h: 3.1, x: 2.2, y: 0.35, z: -0.8, ry: -0.12 },
+    facts: [
+      { v: '100+', k: 'Years' },
+      { v: 'Top', k: 'German market' },
     ],
-    cam: { x: -0.6, y: 0.2, z: 7.8, tx: 1.1, ty: 0.25, tz: -0.6 },
+    photos: [
+      { src: p('photos/ergo/hq.jpg'), w: 4.55, h: 2.7, x: 2.95, y: 0.95, z: -0.7, ry: -0.12 },
+    ],
+    cam: { x: -0.55, y: 0.22, z: 8.0, tx: 1.55, ty: 0.45, tz: -0.4 },
     trail: true,
   },
   {
     id: 'why-2',
     section: 'why',
     kicker: '01  ·  Why ERGO',
-    title: 'Munich Re stands behind us.',
+    title: 'Munich Re behind us.',
     line: 'The world’s largest reinsurer. ERGO is its primary insurer.',
-    photos: [
-      { src: p('photos/ergo/hq.jpg'), w: 3.6, h: 2.15, x: -3.0, y: 0.9, z: -1.8, ry: 0.2 },
-      { src: p('photos/yash/profile.jpg'), w: 2.1, h: 2.5, x: 3.15, y: -0.05, z: 0.2, ry: -0.14 },
+    facts: [
+      { v: '~99%', k: 'Munich Re owned' },
+      { v: 'No. 1', k: 'Reinsurance' },
     ],
-    cam: { x: 0.8, y: 0.15, z: 8.2, tx: -0.2, ty: 0.15, tz: 0 },
+    photos: [
+      { src: p('photos/ergo/skyline.jpg'), w: 4.15, h: 2.34, x: 2.95, y: 1.05, z: -1.0, ry: -0.14 },
+      { src: p('photos/yash/profile.jpg'), w: 1.95, h: 2.32, x: 4.55, y: -0.45, z: 0.4, ry: -0.1 },
+    ],
+    cam: { x: -0.4, y: 0.2, z: 8.3, tx: 1.55, ty: 0.28, tz: 0 },
     trail: false,
   },
   {
@@ -57,10 +65,15 @@ export const slides = [
     kicker: '01  ·  Why ERGO',
     title: 'Every fourth German. Ours.',
     line: '25 million customers in Germany. 40 million worldwide.',
-    photos: [
-      { src: p('photos/ergo/team.jpg'), w: 4.4, h: 2.6, x: 2.6, y: 0.4, z: -1.0, ry: -0.16 },
+    facts: [
+      { v: '25m', k: 'Germany' },
+      { v: '40m', k: 'Worldwide' },
+      { v: '1 in 4', k: 'People here' },
     ],
-    cam: { x: -0.4, y: 0.25, z: 8.0, tx: 1.0, ty: 0.2, tz: -0.4 },
+    photos: [
+      { src: p('photos/ergo/skyline.jpg'), w: 4.2, h: 2.38, x: 3.35, y: 1.0, z: -0.9, ry: -0.14 },
+    ],
+    cam: { x: -0.45, y: 0.22, z: 8.1, tx: 1.5, ty: 0.4, tz: -0.3 },
     trail: false,
   },
   {
@@ -70,10 +83,10 @@ export const slides = [
     title: 'I am building something real.',
     line: 'Not a job. A long game.',
     photos: [
-      { src: p('photos/yash/vision.jpg'), w: 4.8, h: 4.8, x: 2.7, y: 0.15, z: -0.6, ry: -0.1 },
-      { src: p('photos/yash/casual.jpg'), w: 2.4, h: 1.8, x: -3.4, y: 0.7, z: 0.5, ry: 0.18 },
+      { src: p('photos/yash/vision.jpg'), w: 3.15, h: 3.15, x: 3.25, y: 0.55, z: -0.4, ry: -0.1 },
+      { src: p('photos/yash/casual.jpg'), w: 2.2, h: 1.65, x: 4.85, y: -0.75, z: 0.55, ry: -0.16 },
     ],
-    cam: { x: -0.5, y: 0.1, z: 8.4, tx: 0.6, ty: 0.1, tz: 0 },
+    cam: { x: -0.45, y: 0.14, z: 8.5, tx: 1.6, ty: 0.18, tz: 0 },
     trail: true,
   },
   {
@@ -83,11 +96,11 @@ export const slides = [
     title: 'Roots in Bangladesh.',
     line: 'From Dhaka to here — with purpose.',
     photos: [
-      { src: p('photos/bangladesh/dhaka.jpg'), w: 4.5, h: 2.55, x: -2.5, y: 0.85, z: -1.6, ry: 0.14 },
-      { src: p('photos/bangladesh/padma.jpg'), w: 3.6, h: 2.05, x: 3.1, y: -0.35, z: 0.1, ry: -0.2 },
-      { src: p('photos/bangladesh/heritage.jpg'), w: 2.2, h: 1.25, x: 0.2, y: 1.55, z: -0.4, ry: 0.06 },
+      { src: p('photos/bangladesh/dhaka.jpg'), w: 4.4, h: 2.48, x: 2.55, y: 0.75, z: -1.2, ry: -0.12 },
+      { src: p('photos/bangladesh/padma.jpg'), w: 3.15, h: 1.78, x: 4.35, y: -0.7, z: 0.2, ry: -0.18 },
+      { src: p('photos/bangladesh/heritage.jpg'), w: 2.05, h: 1.16, x: 1.15, y: 1.55, z: -0.2, ry: 0.08 },
     ],
-    cam: { x: 0.2, y: 0.35, z: 8.8, tx: 0.1, ty: 0.3, tz: 0 },
+    cam: { x: -0.25, y: 0.32, z: 8.8, tx: 1.2, ty: 0.28, tz: 0 },
     trail: false,
   },
   {
@@ -97,10 +110,10 @@ export const slides = [
     title: 'Give back. Grow together.',
     line: 'Build a life that lifts more than one person.',
     photos: [
-      { src: p('photos/bangladesh/cox.jpg'), w: 4.8, h: 2.7, x: 2.8, y: 0.5, z: -1.2, ry: -0.14 },
-      { src: p('photos/yash/vision.jpg'), w: 2.3, h: 2.3, x: -3.3, y: 0.1, z: 0.4, ry: 0.12 },
+      { src: p('photos/bangladesh/cox.jpg'), w: 4.7, h: 2.64, x: 2.7, y: 0.55, z: -1.0, ry: -0.14 },
+      { src: p('photos/yash/vision.jpg'), w: 2.15, h: 2.15, x: 4.55, y: -0.7, z: 0.45, ry: -0.1 },
     ],
-    cam: { x: -0.3, y: 0.2, z: 8.1, tx: 0.4, ty: 0.2, tz: 0 },
+    cam: { x: -0.45, y: 0.2, z: 8.1, tx: 1.3, ty: 0.2, tz: 0 },
     trail: false,
   },
   {
@@ -109,25 +122,28 @@ export const slides = [
     kicker: '03  ·  Introduction',
     title: 'A century of capital.',
     line: 'Multi-billion group. Munich Re at the core.',
-    photos: [
-      { src: p('photos/ergo/hq.jpg'), w: 5.0, h: 3.0, x: 2.4, y: 0.3, z: -0.9, ry: -0.1 },
+    facts: [
+      { v: '100+', k: 'Years of capital' },
+      { v: 'Munich Re', k: 'Behind the group' },
     ],
-    cam: { x: -0.7, y: 0.15, z: 7.6, tx: 1.2, ty: 0.2, tz: -0.5 },
+    photos: [
+      { src: p('photos/ergo/hq.jpg'), w: 4.55, h: 2.7, x: 2.9, y: 0.9, z: -0.8, ry: -0.1 },
+    ],
+    cam: { x: -0.55, y: 0.18, z: 7.9, tx: 1.5, ty: 0.4, tz: -0.4 },
     trail: true,
   },
   {
     id: 'intro-2',
     section: 'intro',
     kicker: '03  ·  Introduction',
-    title: 'Security. Returns. Flexibility.',
-    line: 'The three points every great investment needs.',
-    photos: [],
+    title: 'The magic triangle.',
+    line: 'Every great investment needs all three.',
     cards: [
-      { label: 'Sicherheit', x: -2.6, y: 0.3, z: 0 },
-      { label: 'Gewinne', x: 0, y: 0.55, z: 0.3 },
-      { label: 'Flexibilität', x: 2.6, y: 0.2, z: 0 },
+      { label: 'Sicherheit', sub: 'Capital that holds.', kicker: '01  Security', x: 2.7, y: 0.95, z: 0.1, ry: 0.1 },
+      { label: 'Gewinne', sub: 'Growth you can keep.', kicker: '02  Returns', x: 4.45, y: 1.15, z: 0.28, ry: -0.04 },
+      { label: 'Flexibilität', sub: 'You stay in control.', kicker: '03  Flexibility', x: 6.15, y: 0.9, z: 0.05, ry: -0.12 },
     ],
-    cam: { x: 0, y: 0.4, z: 8.4, tx: 0, ty: 0.3, tz: 0 },
+    cam: { x: 0.35, y: 0.42, z: 10.9, tx: 3.35, ty: 0.55, tz: 0 },
     trail: false,
   },
   {
@@ -137,48 +153,49 @@ export const slides = [
     title: 'A product that adapts.',
     line: 'You choose what matters most.',
     photos: [
-      { src: p('photos/yash/profile.jpg'), w: 2.0, h: 2.4, x: 3.2, y: 0.2, z: 0.3, ry: -0.16 },
-      { src: p('photos/bangladesh/padma.jpg'), w: 3.4, h: 1.95, x: -3.0, y: 0.55, z: -0.8, ry: 0.12 },
+      { src: p('photos/yash/profile.jpg'), w: 2.05, h: 2.45, x: 4.2, y: 0.15, z: 0.35, ry: -0.14 },
+      { src: p('photos/bangladesh/padma.jpg'), w: 3.5, h: 1.98, x: 2.15, y: 0.85, z: -0.85, ry: -0.08 },
     ],
-    cam: { x: 0.4, y: 0.2, z: 8.0, tx: -0.1, ty: 0.2, tz: 0 },
+    cam: { x: -0.35, y: 0.2, z: 8.0, tx: 1.4, ty: 0.2, tz: 0 },
     trail: false,
   },
   {
     id: 'vgrg-1',
     section: 'vgrg',
     kicker: '04  ·  VG & RG',
-    title: 'Two conversations. One career.',
+    title: 'Two paths. One career.',
     line: 'Help clients. Build a team.',
-    photos: [
-      { src: p('photos/ergo/team.jpg'), w: 4.6, h: 2.7, x: 2.5, y: 0.35, z: -1.0, ry: -0.12 },
+    cards: [
+      { label: 'VG', sub: 'Protect people’s wealth.', kicker: 'Clients', x: 3.35, y: 0.9, z: 0.15, ry: 0.08 },
+      { label: 'RG', sub: 'Build a team that lasts.', kicker: 'People', x: 5.35, y: 0.9, z: 0.15, ry: -0.1 },
     ],
-    cam: { x: -0.5, y: 0.2, z: 8.0, tx: 1.0, ty: 0.2, tz: -0.4 },
+    cam: { x: -0.2, y: 0.32, z: 9.2, tx: 3.4, ty: 0.45, tz: 0 },
     trail: true,
   },
   {
     id: 'vgrg-2',
     section: 'vgrg',
     kicker: '04  ·  VG',
-    title: 'VG — protect people’s wealth.',
+    title: 'Protect people’s wealth.',
     line: 'The client conversation. Security, returns, flexibility.',
     photos: [
-      { src: p('photos/yash/portrait.jpg'), w: 2.15, h: 2.7, x: 3.15, y: 0.15, z: 0.2, ry: -0.14 },
-      { src: p('photos/bangladesh/heritage.jpg'), w: 3.5, h: 2.0, x: -3.1, y: 0.5, z: -0.9, ry: 0.12 },
+      { src: p('photos/yash/portrait.jpg'), w: 2.15, h: 2.7, x: 4.15, y: 0.1, z: 0.3, ry: -0.12 },
+      { src: p('photos/bangladesh/heritage.jpg'), w: 3.55, h: 2.0, x: 2.2, y: 0.75, z: -0.85, ry: -0.08 },
     ],
-    cam: { x: 0.2, y: 0.15, z: 8.2, tx: 0, ty: 0.15, tz: 0 },
+    cam: { x: -0.35, y: 0.15, z: 8.2, tx: 1.45, ty: 0.15, tz: 0 },
     trail: false,
   },
   {
     id: 'vgrg-3',
     section: 'vgrg',
     kicker: '04  ·  RG',
-    title: 'RG — build a team that lasts.',
+    title: 'Build a team that lasts.',
     line: 'This conversation. People who want more.',
     photos: [
-      { src: p('photos/ergo/team.jpg'), w: 4.2, h: 2.5, x: -2.7, y: 0.4, z: -1.0, ry: 0.14 },
-      { src: p('photos/yash/casual.jpg'), w: 2.6, h: 1.95, x: 3.2, y: -0.15, z: 0.3, ry: -0.16 },
+      { src: p('photos/ergo/office.jpg'), w: 4.2, h: 2.36, x: 2.95, y: 0.95, z: -0.8, ry: -0.12 },
+      { src: p('photos/yash/casual.jpg'), w: 2.3, h: 1.72, x: 4.7, y: -0.65, z: 0.45, ry: -0.14 },
     ],
-    cam: { x: 0.3, y: 0.2, z: 8.3, tx: -0.2, ty: 0.15, tz: 0 },
+    cam: { x: -0.35, y: 0.2, z: 8.4, tx: 1.55, ty: 0.28, tz: 0 },
     trail: false,
   },
   {
@@ -187,11 +204,13 @@ export const slides = [
     kicker: '05  ·  How you earn',
     title: 'First: your own work.',
     line: 'You are paid for the clients you serve.',
-    photos: [
-      { src: p('photos/yash/profile.jpg'), w: 2.2, h: 2.65, x: 3.2, y: 0.2, z: 0.2, ry: -0.12 },
-      { src: p('photos/bangladesh/dhaka.jpg'), w: 3.8, h: 2.15, x: -3.0, y: 0.55, z: -1.0, ry: 0.14 },
+    cards: [
+      { label: 'Produktion', sub: 'Your own client work.', kicker: 'Income 01', x: 3.15, y: 0.3, z: 0.2, ry: -0.08 },
     ],
-    cam: { x: 0.15, y: 0.2, z: 8.1, tx: 0.1, ty: 0.2, tz: 0 },
+    photos: [
+      { src: p('photos/yash/profile.jpg'), w: 2.1, h: 2.5, x: 5.05, y: -0.15, z: 0.45, ry: -0.12 },
+    ],
+    cam: { x: -0.5, y: 0.2, z: 8.3, tx: 1.8, ty: 0.18, tz: 0 },
     trail: true,
   },
   {
@@ -200,10 +219,11 @@ export const slides = [
     kicker: '05  ·  How you earn',
     title: 'Then: the people you lead.',
     line: 'Leadership multiplies what you already do well.',
-    photos: [
-      { src: p('photos/ergo/team.jpg'), w: 4.5, h: 2.65, x: 2.55, y: 0.4, z: -0.8, ry: -0.12 },
+    cards: [
+      { label: 'Führung', sub: 'Paid for the people you lead.', kicker: 'Income 02', x: 2.15, y: 0.3, z: 0.15, ry: 0.08 },
+      { label: 'System', sub: 'A structure that scales.', kicker: 'Income 02', x: 4.5, y: 0.3, z: 0.15, ry: -0.1 },
     ],
-    cam: { x: -0.5, y: 0.2, z: 7.9, tx: 1.0, ty: 0.25, tz: -0.4 },
+    cam: { x: -0.65, y: 0.25, z: 8.5, tx: 2.25, ty: 0.2, tz: 0 },
     trail: false,
   },
   {
@@ -211,12 +231,16 @@ export const slides = [
     section: 'earn',
     kicker: '05  ·  How you earn',
     title: 'Training. System. Support.',
-    line: 'Tue & Thu 19:00–21:00. Sales. Recruiting. Leadership.',
-    photos: [
-      { src: p('photos/yash/vision.jpg'), w: 3.4, h: 3.4, x: 2.8, y: 0.15, z: -0.4, ry: -0.1 },
-      { src: p('photos/bangladesh/padma.jpg'), w: 3.2, h: 1.8, x: -3.2, y: 0.6, z: -0.8, ry: 0.16 },
+    line: 'You are not left alone with the craft.',
+    facts: [
+      { v: 'Tue + Thu', k: '19:00–21:00' },
+      { v: 'Sales', k: 'Recruiting · Lead' },
     ],
-    cam: { x: -0.2, y: 0.15, z: 8.2, tx: 0.4, ty: 0.15, tz: 0 },
+    photos: [
+      { src: p('photos/ergo/office.jpg'), w: 4.4, h: 2.48, x: 2.55, y: 0.55, z: -0.7, ry: -0.1 },
+      { src: p('photos/yash/vision.jpg'), w: 2.2, h: 2.2, x: 4.6, y: -0.65, z: 0.4, ry: -0.1 },
+    ],
+    cam: { x: -0.4, y: 0.15, z: 8.2, tx: 1.4, ty: 0.15, tz: 0 },
     trail: false,
   },
   {
@@ -226,9 +250,9 @@ export const slides = [
     title: 'Your turn. Ask anything.',
     line: 'No script from here. Just honesty.',
     photos: [
-      { src: p('photos/yash/portrait.jpg'), w: 2.3, h: 2.9, x: 3.0, y: 0.1, z: 0.3, ry: -0.12 },
+      { src: p('photos/yash/portrait.jpg'), w: 2.35, h: 2.95, x: 3.35, y: 0.12, z: 0.25, ry: -0.1 },
     ],
-    cam: { x: -0.4, y: 0.15, z: 8.0, tx: 0.8, ty: 0.1, tz: 0 },
+    cam: { x: -0.55, y: 0.15, z: 8.0, tx: 1.55, ty: 0.1, tz: 0 },
     trail: true,
   },
   {
@@ -238,10 +262,10 @@ export const slides = [
     title: 'Shall we start together?',
     line: 'The next step is yours.',
     photos: [
-      { src: p('photos/yash/vision.jpg'), w: 3.6, h: 3.6, x: 2.6, y: 0.1, z: -0.5, ry: -0.08 },
-      { src: p('photos/bangladesh/cox.jpg'), w: 3.4, h: 1.9, x: -3.3, y: 0.55, z: -0.9, ry: 0.14 },
+      { src: p('photos/yash/vision.jpg'), w: 3.05, h: 3.05, x: 3.15, y: 0.5, z: -0.3, ry: -0.08 },
+      { src: p('photos/bangladesh/cox.jpg'), w: 2.95, h: 1.66, x: 4.95, y: -0.7, z: 0.4, ry: -0.14 },
     ],
-    cam: { x: 0, y: 0.25, z: 8.5, tx: 0.2, ty: 0.15, tz: 0 },
+    cam: { x: -0.3, y: 0.2, z: 8.6, tx: 1.65, ty: 0.18, tz: 0 },
     trail: false,
   },
 ];

@@ -1,8 +1,12 @@
 import * as THREE from 'three';
 import gsap from 'gsap';
+import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
+import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
+import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
 
 const BLUE = 0x0054a6;
 const DARK = 0x05070b;
+const WARM = 0xc9b48a;
 
 function roundedShape(w, h, r) {
   const s = new THREE.Shape();
@@ -21,11 +25,30 @@ function roundedShape(w, h, r) {
   return s;
 }
 
-function setRectUVs(geo, w, h) {
+function coverUVs(geo, w, h, tex) {
+  const img = tex.image;
+  const tw = img?.width || 1;
+  const th = img?.height || 1;
+  const texAspect = tw / th;
+  const planeAspect = w / h;
+  let sx = 1;
+  let sy = 1;
+  let ox = 0;
+  let oy = 0;
+  if (texAspect > planeAspect) {
+    sx = planeAspect / texAspect;
+    ox = (1 - sx) / 2;
+  } else {
+    sy = texAspect / planeAspect;
+    oy = (1 - sy) / 2;
+    if (planeAspect < 0.95) oy = Math.min(oy * 0.28, 0.06);
+  }
   const pos = geo.getAttribute('position');
   const uv = geo.getAttribute('uv');
   for (let i = 0; i < pos.count; i++) {
-    uv.setXY(i, (pos.getX(i) + w / 2) / w, (pos.getY(i) + h / 2) / h);
+    const u = (pos.getX(i) + w / 2) / w;
+    const v = (pos.getY(i) + h / 2) / h;
+    uv.setXY(i, ox + u * sx, oy + v * sy);
   }
   uv.needsUpdate = true;
 }
@@ -34,20 +57,19 @@ function makePhotoMesh(tex, w, h) {
   const group = new THREE.Group();
   const radius = Math.min(w, h) * 0.045;
   const geo = new THREE.ShapeGeometry(roundedShape(w, h, radius), 12);
-  setRectUVs(geo, w, h);
+  coverUVs(geo, w, h, tex);
 
-  const frameW = w + 0.07;
-  const frameH = h + 0.07;
-  const frameGeo = new THREE.ShapeGeometry(roundedShape(frameW, frameH, radius + 0.02), 12);
-  setRectUVs(frameGeo, frameW, frameH);
+  const frameW = w + 0.055;
+  const frameH = h + 0.055;
+  const frameGeo = new THREE.ShapeGeometry(roundedShape(frameW, frameH, radius + 0.018), 12);
   const frame = new THREE.Mesh(
     frameGeo,
     new THREE.MeshStandardMaterial({
-      color: 0x07101c,
+      color: 0x0a1624,
       emissive: BLUE,
-      emissiveIntensity: 0.45,
-      metalness: 0.2,
-      roughness: 0.45,
+      emissiveIntensity: 0.62,
+      metalness: 0.35,
+      roughness: 0.38,
     }),
   );
   frame.position.z = -0.012;
@@ -63,8 +85,21 @@ function makePhotoMesh(tex, w, h) {
   mesh.position.z = 0.01;
   group.add(mesh);
 
+  const glow = new THREE.Mesh(
+    new THREE.PlaneGeometry(w * 1.12, h * 1.12),
+    new THREE.MeshBasicMaterial({
+      color: BLUE,
+      transparent: true,
+      opacity: 0,
+      depthWrite: false,
+      blending: THREE.AdditiveBlending,
+    }),
+  );
+  glow.position.z = -0.05;
+  group.add(glow);
+
   const shadow = new THREE.Mesh(
-    new THREE.PlaneGeometry(w * 1.05, h * 1.05),
+    new THREE.PlaneGeometry(w * 1.08, h * 1.08),
     new THREE.MeshBasicMaterial({
       color: 0x000000,
       transparent: true,
@@ -72,44 +107,69 @@ function makePhotoMesh(tex, w, h) {
       depthWrite: false,
     }),
   );
-  shadow.position.z = -0.08;
+  shadow.position.z = -0.09;
   group.add(shadow);
 
   group.userData.mat = mat;
   group.userData.shadow = shadow;
   group.userData.frame = frame;
+  group.userData.glow = glow;
   return group;
 }
 
-function makeCard(label) {
-  const w = 2.15;
-  const h = 2.7;
+function makeCard({ label, sub = '', kicker = '' }) {
+  const w = 1.88;
+  const h = 2.42;
   const canvas = document.createElement('canvas');
-  canvas.width = 768;
-  canvas.height = 960;
+  canvas.width = 1024;
+  canvas.height = 1350;
   const ctx = canvas.getContext('2d');
-  ctx.fillStyle = '#0c1828';
-  ctx.fillRect(0, 0, 768, 960);
-  const g = ctx.createLinearGradient(0, 80, 768, 960);
-  g.addColorStop(0, 'rgba(0,84,166,0.55)');
-  g.addColorStop(1, 'rgba(10,22,38,0.2)');
+  ctx.fillStyle = '#0a1420';
+  ctx.fillRect(0, 0, 1024, 1350);
+  const g = ctx.createLinearGradient(0, 40, 900, 1350);
+  g.addColorStop(0, 'rgba(0,84,166,0.72)');
+  g.addColorStop(0.45, 'rgba(12,28,48,0.35)');
+  g.addColorStop(1, 'rgba(8,16,28,0.15)');
   ctx.fillStyle = g;
-  ctx.fillRect(0, 0, 768, 960);
-  ctx.strokeStyle = 'rgba(170,208,240,0.8)';
-  ctx.lineWidth = 8;
-  ctx.strokeRect(28, 28, 712, 904);
-  ctx.fillStyle = 'rgba(190,220,245,0.9)';
-  ctx.font = '500 26px Manrope, system-ui, sans-serif';
-  ctx.fillText('THE TRIANGLE', 72, 170);
+  ctx.fillRect(0, 0, 1024, 1350);
+  ctx.strokeStyle = 'rgba(190, 220, 245, 0.78)';
+  ctx.lineWidth = 6;
+  ctx.strokeRect(36, 36, 952, 1278);
+  ctx.fillStyle = 'rgba(180, 214, 242, 0.88)';
+  ctx.font = '600 28px Manrope, system-ui, sans-serif';
+  if (kicker) ctx.fillText(kicker.toUpperCase(), 88, 180);
   ctx.fillStyle = '#ffffff';
-  ctx.font = '700 78px Syne, sans-serif';
-  const words = label.split(' ');
-  words.forEach((word, i) => ctx.fillText(word, 72, 390 + i * 92));
+  ctx.font = '700 86px Syne, sans-serif';
+  const words = String(label).split(' ');
+  words.forEach((word, i) => ctx.fillText(word, 88, 360 + i * 100));
+  if (sub) {
+    ctx.fillStyle = 'rgba(220, 232, 244, 0.78)';
+    ctx.font = '500 36px Manrope, system-ui, sans-serif';
+    const lines = wrapText(ctx, sub, 820);
+    const startY = 360 + words.length * 100 + 48;
+    lines.forEach((line, i) => ctx.fillText(line, 88, startY + i * 50));
+  }
   const tex = new THREE.CanvasTexture(canvas);
   tex.colorSpace = THREE.SRGBColorSpace;
   tex.anisotropy = 8;
-  const group = makePhotoMesh(tex, w, h);
-  return group;
+  return makePhotoMesh(tex, w, h);
+}
+
+function wrapText(ctx, text, maxWidth) {
+  const words = text.split(' ');
+  const lines = [];
+  let current = '';
+  words.forEach((word) => {
+    const next = current ? `${current} ${word}` : word;
+    if (ctx.measureText(next).width > maxWidth && current) {
+      lines.push(current);
+      current = word;
+    } else {
+      current = next;
+    }
+  });
+  if (current) lines.push(current);
+  return lines.slice(0, 3);
 }
 
 export function createWorld(canvas) {
@@ -123,35 +183,36 @@ export function createWorld(canvas) {
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.75));
   renderer.outputColorSpace = THREE.SRGBColorSpace;
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
-  renderer.toneMappingExposure = 1.18;
+  renderer.toneMappingExposure = 1.22;
 
   const scene = new THREE.Scene();
-  scene.fog = new THREE.Fog(DARK, 18, 42);
+  scene.fog = new THREE.Fog(DARK, 16, 40);
 
   const camera = new THREE.PerspectiveCamera(38, 1, 0.1, 80);
   camera.position.set(0, 0.3, 8.6);
 
   const look = new THREE.Vector3(0, 0.15, 0);
 
-  scene.add(new THREE.AmbientLight(0x9bb4cc, 0.32));
+  scene.add(new THREE.AmbientLight(0x9bb4cc, 0.38));
 
-  const key = new THREE.DirectionalLight(0xffffff, 1.05);
+  const key = new THREE.DirectionalLight(0xffffff, 1.12);
   key.position.set(4.5, 6, 8);
   scene.add(key);
 
-  const rim = new THREE.DirectionalLight(BLUE, 1.35);
+  const rim = new THREE.DirectionalLight(BLUE, 1.5);
   rim.position.set(-6, 2, -4);
   scene.add(rim);
 
-  const fill = new THREE.PointLight(BLUE, 8, 28, 2);
+  const fill = new THREE.PointLight(BLUE, 9, 28, 2);
   fill.position.set(0, 1.2, 4);
   scene.add(fill);
 
-  const groundGlow = new THREE.PointLight(0x1a3a66, 4, 18, 2);
+  const groundGlow = new THREE.PointLight(0x1a3a66, 4.4, 18, 2);
   groundGlow.position.set(0, -3, 2);
   scene.add(groundGlow);
 
-  const mobile = window.matchMedia('(max-width: 720px)').matches;
+  const isMobile = () => window.matchMedia('(max-width: 720px)').matches;
+  let mobile = isMobile();
   const count = mobile ? 260 : 820;
   const positions = new Float32Array(count * 3);
   const speeds = new Float32Array(count);
@@ -175,19 +236,24 @@ export function createWorld(canvas) {
   const particles = new THREE.Points(pGeo, pMat);
   scene.add(particles);
 
-  const trailGeo = new THREE.BufferGeometry();
-  const trailCount = 90;
-  const trailPos = new Float32Array(trailCount * 3);
-  trailGeo.setAttribute('position', new THREE.BufferAttribute(trailPos, 3));
-  const trailMat = new THREE.LineBasicMaterial({
-    color: BLUE,
-    transparent: true,
-    opacity: 0,
-    blending: THREE.AdditiveBlending,
-    depthWrite: false,
-  });
-  const trail = new THREE.Line(trailGeo, trailMat);
-  scene.add(trail);
+  function makeTrail(color) {
+    const geo = new THREE.BufferGeometry();
+    const n = 90;
+    const pos = new Float32Array(n * 3);
+    geo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+    const mat = new THREE.LineBasicMaterial({
+      color,
+      transparent: true,
+      opacity: 0,
+      blending: THREE.AdditiveBlending,
+      depthWrite: false,
+    });
+    const line = new THREE.Line(geo, mat);
+    scene.add(line);
+    return { geo, mat, pos, n, line };
+  }
+  const trailA = makeTrail(BLUE);
+  const trailB = makeTrail(WARM);
 
   const loader = new THREE.TextureLoader();
   const texCache = new Map();
@@ -215,7 +281,20 @@ export function createWorld(canvas) {
   }
 
   const slideGroups = [];
-  const interactive = [];
+  let composer = null;
+  let bloomPass = null;
+  let useBloom = !mobile && !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function setupComposer(w, h) {
+    if (!useBloom) {
+      composer = null;
+      return;
+    }
+    composer = new EffectComposer(renderer);
+    composer.addPass(new RenderPass(scene, camera));
+    bloomPass = new UnrealBloomPass(new THREE.Vector2(w, h), 0.28, 0.42, 0.86);
+    composer.addPass(bloomPass);
+  }
 
   async function buildSlides(slides) {
     const urls = new Set();
@@ -233,15 +312,14 @@ export function createWorld(canvas) {
         mesh.userData.rest = { x: ph.x, y: ph.y, z: ph.z, ry: ph.ry || 0 };
         mesh.userData.phase = Math.random() * Math.PI * 2;
         g.add(mesh);
-        interactive.push(mesh);
       }
       for (const card of slide.cards || []) {
-        const mesh = makeCard(card.label);
+        const mesh = makeCard(card);
         mesh.position.set(card.x, card.y, card.z);
-        mesh.userData.rest = { x: card.x, y: card.y, z: card.z, ry: 0 };
+        mesh.userData.rest = { x: card.x, y: card.y, z: card.z, ry: card.ry || 0 };
         mesh.userData.phase = Math.random() * Math.PI * 2;
+        mesh.rotation.y = card.ry || 0;
         g.add(mesh);
-        interactive.push(mesh);
       }
       scene.add(g);
       slideGroups.push(g);
@@ -250,21 +328,35 @@ export function createWorld(canvas) {
 
   let current = -1;
   let hover = null;
-  const pointer = new THREE.Vector2(-99, -99);
+  const pointer = new THREE.Vector2(0, 0);
+  let pointerLive = false;
   const raycaster = new THREE.Raycaster();
+
+  function killMeshTweens(m) {
+    gsap.killTweensOf(m.position);
+    gsap.killTweensOf(m.scale);
+    gsap.killTweensOf(m.rotation);
+    if (m.userData.mat) gsap.killTweensOf(m.userData.mat);
+    if (m.userData.shadow) gsap.killTweensOf(m.userData.shadow.material);
+    if (m.userData.glow) gsap.killTweensOf(m.userData.glow.material);
+    if (m.userData.frame) gsap.killTweensOf(m.userData.frame.material);
+  }
 
   function fadeGroup(group, show, delay = 0) {
     group.visible = true;
     const meshes = group.children;
     meshes.forEach((m, i) => {
+      killMeshTweens(m);
       const rest = m.userData.rest || { x: 0, y: 0, z: 0, ry: 0 };
       const mat = m.userData.mat;
       const shadow = m.userData.shadow;
+      const glow = m.userData.glow;
       if (show) {
         m.position.set(rest.x * 1.18, rest.y - 0.35, rest.z - 1.2);
         m.scale.set(0.86, 0.86, 0.86);
         if (mat) mat.opacity = 0;
         if (shadow) shadow.material.opacity = 0;
+        if (glow) glow.material.opacity = 0;
         gsap.to(m.position, {
           x: rest.x,
           y: rest.y,
@@ -296,6 +388,13 @@ export function createWorld(canvas) {
             delay: delay + 0.2,
           });
         }
+        if (glow) {
+          gsap.to(glow.material, {
+            opacity: 0.16,
+            duration: 1.1,
+            delay: delay + 0.15,
+          });
+        }
       } else {
         gsap.to(m.position, {
           z: rest.z - 0.8,
@@ -305,6 +404,7 @@ export function createWorld(canvas) {
         });
         if (mat) gsap.to(mat, { opacity: 0, duration: 0.55, ease: 'power2.in' });
         if (shadow) gsap.to(shadow.material, { opacity: 0, duration: 0.4 });
+        if (glow) gsap.to(glow.material, { opacity: 0, duration: 0.4 });
         gsap.to(m.scale, {
           x: 0.94,
           y: 0.94,
@@ -319,34 +419,48 @@ export function createWorld(canvas) {
     });
   }
 
-  function burstTrail(from, to) {
-    for (let i = 0; i < trailCount; i++) {
-      const t = i / (trailCount - 1);
+  function fillTrail(trail, from, to, amp) {
+    for (let i = 0; i < trail.n; i++) {
+      const t = i / (trail.n - 1);
       const s = t * t * (3 - 2 * t);
-      trailPos[i * 3] = from.x + (to.x - from.x) * s + Math.sin(t * 8) * 0.15;
-      trailPos[i * 3 + 1] = from.y + (to.y - from.y) * s + Math.sin(t * 5) * 0.08;
-      trailPos[i * 3 + 2] = from.z + (to.z - from.z) * s;
+      trail.pos[i * 3] = from.x + (to.x - from.x) * s + Math.sin(t * 8) * amp;
+      trail.pos[i * 3 + 1] = from.y + (to.y - from.y) * s + Math.sin(t * 5) * amp * 0.55;
+      trail.pos[i * 3 + 2] = from.z + (to.z - from.z) * s;
     }
-    trailGeo.attributes.position.needsUpdate = true;
-    trailMat.opacity = 0.85;
-    gsap.to(trailMat, { opacity: 0, duration: 1.4, ease: 'power2.out', delay: 0.15 });
+    trail.geo.attributes.position.needsUpdate = true;
+    trail.mat.opacity = 0.85;
+    gsap.to(trail.mat, { opacity: 0, duration: 1.4, ease: 'power2.out', delay: 0.15 });
   }
 
-  function setSlide(index, { trail = false, reduced = false } = {}) {
+  function burstTrail(from, to) {
+    fillTrail(trailA, from, to, 0.15);
+    fillTrail(trailB, from, to, 0.22);
+  }
+
+  function setSlide(index, { reduced = false } = {}) {
     if (index === current) return;
     const prev = current;
+    hover = null;
     if (prev >= 0) fadeGroup(slideGroups[prev], false);
     current = index;
     const g = slideGroups[index];
     if (g) fadeGroup(g, true, reduced ? 0 : 0.25);
-    if (trail && prev >= 0 && !reduced) {
-      burstTrail(camera.position.clone(), camera.position);
-    }
   }
 
   function setPointer(x, y) {
     pointer.x = x;
     pointer.y = y;
+    pointerLive = true;
+  }
+
+  function layoutGroups(w) {
+    mobile = w < 720;
+    useBloom = !mobile && !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const s = mobile ? 0.4 : w < 1100 ? 0.82 : 1;
+    slideGroups.forEach((g) => {
+      g.scale.setScalar(s);
+      g.position.set(0, mobile ? 1.28 : 0, 0);
+    });
   }
 
   function resize(w, h) {
@@ -354,11 +468,33 @@ export function createWorld(canvas) {
     camera.fov = w < 720 ? 46 : 38;
     camera.updateProjectionMatrix();
     renderer.setSize(w, h, false);
-    const mobile = w < 720;
-    const s = mobile ? 0.36 : w < 1100 ? 0.82 : 1;
-    slideGroups.forEach((g) => {
-      g.scale.setScalar(s);
-      g.position.set(0, mobile ? 1.15 : 0, 0);
+    layoutGroups(w);
+    if (useBloom) {
+      if (!composer) setupComposer(w, h);
+      else {
+        composer.setSize(w, h);
+        bloomPass?.setSize(w, h);
+      }
+    } else {
+      composer = null;
+    }
+  }
+
+  function dimOthers(active) {
+    const g = slideGroups[current];
+    if (!g) return;
+    g.children.forEach((m) => {
+      const on = !active || m === active;
+      if (m.userData.mat) gsap.to(m.userData.mat, { opacity: on ? 1 : 0.32, duration: 0.35 });
+      if (m.userData.frame) {
+        gsap.to(m.userData.frame.material, {
+          emissiveIntensity: on ? 0.62 : 0.12,
+          duration: 0.35,
+        });
+      }
+      if (m.userData.glow) {
+        gsap.to(m.userData.glow.material, { opacity: on ? 0.16 : 0.04, duration: 0.35 });
+      }
     });
   }
 
@@ -386,7 +522,7 @@ export function createWorld(canvas) {
     }
 
     raycaster.setFromCamera(pointer, camera);
-    const hits = raycaster.intersectObjects(interactive, true);
+    const hits = g ? raycaster.intersectObjects(g.children, true) : [];
     const next =
       hits.length && hits[0].object.parent && hits[0].object.parent.userData.mat
         ? hits[0].object.parent
@@ -394,6 +530,7 @@ export function createWorld(canvas) {
     if (hover !== next) {
       if (hover) gsap.to(hover.scale, { x: 1, y: 1, z: 1, duration: 0.45, ease: 'power2.out' });
       hover = next;
+      dimOthers(hover);
       if (hover) gsap.to(hover.scale, { x: 1.045, y: 1.045, z: 1.045, duration: 0.45, ease: 'power2.out' });
     }
     if (hover) {
@@ -405,9 +542,14 @@ export function createWorld(canvas) {
       );
     }
 
-    camera.lookAt(look);
-    renderer.render(scene, camera);
+    const px = pointerLive ? pointer.x : 0;
+    const py = pointerLive ? pointer.y : 0;
+    camera.lookAt(look.x + px * 0.12, look.y + py * 0.06, look.z);
+    if (composer && useBloom && !reduced) composer.render();
+    else renderer.render(scene, camera);
   }
+
+  setupComposer(window.innerWidth || 1280, window.innerHeight || 720);
 
   return {
     renderer,

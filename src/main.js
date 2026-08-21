@@ -13,7 +13,9 @@ const els = {
   kicker: document.querySelector('#kicker'),
   title: document.querySelector('#title'),
   line: document.querySelector('#line'),
+  facts: document.querySelector('#facts'),
   meta: document.querySelector('#sectionLabel'),
+  count: document.querySelector('#count'),
   fill: document.querySelector('#fill'),
   ticks: document.querySelector('#ticks'),
   loader: document.querySelector('#loader'),
@@ -22,7 +24,7 @@ const els = {
   next: document.querySelector('#next'),
 };
 
-sections.forEach((sec, i) => {
+sections.forEach((sec) => {
   const b = document.createElement('button');
   b.type = 'button';
   b.textContent = sec.label;
@@ -37,45 +39,96 @@ sections.forEach((sec, i) => {
 let index = 0;
 const lookProxy = { x: 0.15, y: 0.2, z: 0 };
 
+function renderFacts(slide) {
+  els.facts.replaceChildren();
+  (slide.facts || []).forEach((f) => {
+    const d = document.createElement('div');
+    d.className = 'fact';
+    const v = document.createElement('b');
+    v.textContent = f.v;
+    const k = document.createElement('span');
+    k.textContent = f.k;
+    d.append(v, k);
+    els.facts.appendChild(d);
+  });
+}
+
 function renderHud(slide, first = false) {
   const dur = reduced || first ? 0.01 : 0.55;
   const tl = gsap.timeline();
   if (!first) {
-    tl.to([els.kicker, els.title, els.line], { opacity: 0, y: 12, duration: 0.28, ease: 'power2.in' });
+    tl.to([els.kicker, els.title, els.line, els.facts], {
+      opacity: 0,
+      y: 12,
+      duration: 0.28,
+      ease: 'power2.in',
+    });
   }
   tl.add(() => {
     els.kicker.textContent = slide.kicker;
     els.title.textContent = slide.title;
     els.line.textContent = slide.line;
+    renderFacts(slide);
     const sec = sections.find((s) => s.id === slide.section);
     els.meta.textContent = sec ? sec.label : '';
+    els.count.textContent = `${String(index + 1).padStart(2, '0')}  /  ${String(slides.length).padStart(2, '0')}`;
     document.querySelectorAll('.ticks button').forEach((b) => {
       b.classList.toggle('active', b.dataset.section === slide.section);
     });
     els.fill.style.width = `${((index + 1) / slides.length) * 100}%`;
+    els.prev.disabled = index === 0;
+    els.next.disabled = index === slides.length - 1;
   });
   tl.fromTo(
-    [els.kicker, els.title, els.line],
+    [els.kicker, els.title, els.line, els.facts],
     { opacity: 0, y: 18 },
     { opacity: 1, y: 0, duration: dur, stagger: 0.05, ease: 'power3.out' },
   );
   if (index > 0) els.hint.classList.add('gone');
 }
 
+function camFor(slide) {
+  const mobile = window.innerWidth < 720;
+  const c = slide.cam;
+  if (!mobile) return { pos: { x: c.x, y: c.y, z: c.z }, look: { x: c.tx, y: c.ty, z: c.tz } };
+  return {
+    pos: { x: c.x * 0.12, y: c.y + 0.12, z: Math.min(c.z + 0.5, 9.3) },
+    look: { x: Math.min(c.tx * 0.3, 1.05), y: c.ty + 0.22, z: c.tz },
+  };
+}
+
 function moveCamera(slide, withTrail) {
   const dur = reduced ? 0.01 : 1.55;
   const from = world.camera.position.clone();
-  const to = { x: slide.cam.x, y: slide.cam.y, z: slide.cam.z };
+  const mapped = camFor(slide);
+  const to = mapped.pos;
   if (withTrail && !reduced) world.burstTrail(from, to);
+  const mid = {
+    x: (from.x + to.x) / 2 + (to.z - from.z) * 0.07,
+    y: (from.y + to.y) / 2 + 0.32,
+    z: (from.z + to.z) / 2 - 0.15,
+  };
+  gsap.killTweensOf(world.camera.position);
+  gsap.killTweensOf(lookProxy);
+  if (reduced) {
+    world.camera.position.set(to.x, to.y, to.z);
+    lookProxy.x = mapped.look.x;
+    lookProxy.y = mapped.look.y;
+    lookProxy.z = mapped.look.z;
+    world.look.set(lookProxy.x, lookProxy.y, lookProxy.z);
+    return;
+  }
   gsap.to(world.camera.position, {
-    ...to,
-    duration: dur,
-    ease: 'power3.inOut',
+    keyframes: [
+      { x: mid.x, y: mid.y, z: mid.z, duration: dur * 0.42 },
+      { x: to.x, y: to.y, z: to.z, duration: dur * 0.58 },
+    ],
+    ease: 'power2.inOut',
   });
   gsap.to(lookProxy, {
-    x: slide.cam.tx,
-    y: slide.cam.ty,
-    z: slide.cam.tz,
+    x: mapped.look.x,
+    y: mapped.look.y,
+    z: mapped.look.z,
     duration: dur,
     ease: 'power3.inOut',
     onUpdate: () => world.look.set(lookProxy.x, lookProxy.y, lookProxy.z),
@@ -87,13 +140,19 @@ function goTo(i, { first = false } = {}) {
   const slide = slides[i];
   renderHud(slide, first);
   moveCamera(slide, slide.trail && !first);
-  world.setSlide(i, { trail: false, reduced });
+  world.setSlide(i, { reduced });
 }
 
 const nav = createNav({
   total: slides.length,
   getIndex: () => index,
   onGo: (i) => goTo(i),
+  onSection: (n) => {
+    const sec = sections[n];
+    if (!sec) return;
+    const idx = slides.findIndex((s) => s.section === sec.id);
+    if (idx >= 0) nav.jump(idx);
+  },
 });
 
 els.prev.addEventListener('click', () => nav.go(-1));
@@ -107,6 +166,16 @@ window.addEventListener('mousemove', (e) => {
 
 function onResize() {
   world.resize(window.innerWidth, window.innerHeight);
+  const slide = slides[index];
+  if (!slide) return;
+  const mapped = camFor(slide);
+  gsap.killTweensOf(world.camera.position);
+  gsap.killTweensOf(lookProxy);
+  world.camera.position.set(mapped.pos.x, mapped.pos.y, mapped.pos.z);
+  lookProxy.x = mapped.look.x;
+  lookProxy.y = mapped.look.y;
+  lookProxy.z = mapped.look.z;
+  world.look.set(lookProxy.x, lookProxy.y, lookProxy.z);
 }
 window.addEventListener('resize', onResize);
 onResize();
@@ -119,6 +188,11 @@ function loop() {
 }
 
 async function start() {
+  try {
+    await document.fonts.ready;
+  } catch {
+    /* canvas cards still render with fallback fonts */
+  }
   await world.buildSlides(slides);
   onResize();
   goTo(0, { first: true });

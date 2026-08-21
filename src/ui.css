@@ -31,8 +31,9 @@ html, body, #app {
   position: absolute;
   inset: 0;
   background:
-    radial-gradient(120% 90% at 70% 40%, transparent 20%, rgba(5, 7, 11, 0.35) 70%, rgba(5, 7, 11, 0.78) 100%),
-    linear-gradient(90deg, rgba(5, 7, 11, 0.55) 0%, transparent 42%);
+    radial-gradient(120% 90% at 72% 38%, transparent 18%, rgba(5, 7, 11, 0.28) 68%, rgba(5, 7, 11, 0.8) 100%),
+    linear-gradient(90deg, rgba(5, 7, 11, 0.78) 0%, rgba(5, 7, 11, 0.42) 26%, transparent 50%),
+    linear-gradient(180deg, transparent 42%, rgba(5, 7, 11, 0.38) 100%);
   z-index: 2;
 }
 
@@ -74,6 +75,12 @@ html, body, #app {
   font-weight: 500;
 }
 
+.chrome-right {
+  display: flex;
+  align-items: center;
+  gap: 22px;
+}
+
 .meta {
   font-size: 11px;
   letter-spacing: 0.22em;
@@ -81,12 +88,20 @@ html, body, #app {
   color: var(--muted);
 }
 
+.count {
+  font-family: Syne, sans-serif;
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+}
+
 .hud {
   position: absolute;
-  left: 36px;
+  left: 84px;
   bottom: 108px;
   z-index: 5;
-  max-width: min(640px, 54vw);
+  max-width: min(620px, 48vw);
   pointer-events: none;
 }
 
@@ -102,10 +117,10 @@ html, body, #app {
 .title {
   font-family: Syne, sans-serif;
   font-weight: 700;
-  font-size: clamp(2.2rem, 5.4vw, 5.2rem);
+  font-size: clamp(2.1rem, 4.8vw, 4.5rem);
   line-height: 1.02;
   letter-spacing: -0.03em;
-  max-width: 12ch;
+  max-width: 14ch;
   text-wrap: balance;
 }
 
@@ -115,6 +130,37 @@ html, body, #app {
   color: var(--muted);
   max-width: 36ch;
   line-height: 1.5;
+}
+
+.facts {
+  display: flex;
+  gap: 22px;
+  margin-top: 22px;
+  flex-wrap: wrap;
+}
+
+.fact {
+  border-left: 1px solid var(--blue);
+  padding: 0 0 0 12px;
+  min-width: 0;
+}
+
+.fact b {
+  display: block;
+  font-family: Syne, sans-serif;
+  font-size: clamp(1.05rem, 1.8vw, 1.35rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+}
+
+.fact span {
+  display: block;
+  margin-top: 5px;
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--muted);
 }
 
 .progress {
@@ -203,6 +249,11 @@ html, body, #app {
 
 .nav-btn.prev { left: 18px; }
 .nav-btn.next { right: 18px; }
+.nav-btn:disabled {
+  opacity: 0.28;
+  cursor: default;
+  pointer-events: none;
+}
 
 .hint {
   position: absolute;
@@ -283,6 +334,8 @@ html, body, #app {
     max-width: none;
   }
   .title { max-width: 11ch; font-size: clamp(2rem, 10vw, 3.1rem); }
+  .facts { gap: 16px; margin-top: 16px; }
+  .count { letter-spacing: 0.12em; }
   .vignette {
     background:
       radial-gradient(140% 80% at 50% 28%, transparent 10%, rgba(5, 7, 11, 0.2) 55%, rgba(5, 7, 11, 0.88) 100%),
