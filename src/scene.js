@@ -8,6 +8,257 @@ const ACCENT = 0x7a2042;
 const CREAM = 0xf4e4d4;
 const WARM = 0xc4a08a;
 
+const ROOMS = {
+  open: {
+    bg: 0xf4e4d4,
+    fog: 0xf4e4d4,
+    fogNear: 16,
+    fogFar: 42,
+    ambient: 0xf3e6d8,
+    ambientI: 0.72,
+    keyI: 1.12,
+    keyPos: [4.5, 6, 8],
+    rim: ACCENT,
+    rimI: 0.95,
+    rimPos: [-6, 2, -4],
+    fill: ACCENT,
+    fillI: 5.2,
+    ground: 0xc9a58a,
+    groundI: 3.6,
+    floor: 0xe8c8b0,
+    floorOp: 0.18,
+    sky: 0xf7ece0,
+    particles: 0xc4a08a,
+    particleOp: 0.38,
+    pSize: 0.024,
+    pScale: 1,
+    dust: ACCENT,
+    trailA: ACCENT,
+    trailB: WARM,
+    exposure: 1.05,
+    bloom: 0.1,
+    spin: 0.012,
+    cssBg: '#f4e4d4',
+  },
+  meet: {
+    bg: 0xffe4c8,
+    fog: 0xffe0c0,
+    fogNear: 10,
+    fogFar: 30,
+    ambient: 0xffd8b0,
+    ambientI: 0.82,
+    keyI: 1.45,
+    keyPos: [3, 7, 6],
+    rim: 0xc04060,
+    rimI: 1.4,
+    rimPos: [-5, 3, -2],
+    fill: 0xff8a60,
+    fillI: 7.5,
+    ground: 0xffb090,
+    groundI: 6.2,
+    floor: 0xf0b090,
+    floorOp: 0.32,
+    sky: 0xffe8d0,
+    particles: 0xffc8a0,
+    particleOp: 0.5,
+    pSize: 0.034,
+    pScale: 1.15,
+    dust: 0x7a2042,
+    trailA: ACCENT,
+    trailB: 0xffc8a0,
+    exposure: 1.18,
+    bloom: 0.18,
+    spin: 0.006,
+    cssBg: '#ffe4c8',
+  },
+  vision: {
+    bg: 0xe6d5c5,
+    fog: 0xeadbca,
+    fogNear: 6,
+    fogFar: 22,
+    ambient: 0xead8c4,
+    ambientI: 0.72,
+    keyI: 1.05,
+    keyPos: [2, 8, 3],
+    rim: 0xc4a090,
+    rimI: 0.7,
+    rimPos: [-8, 1, -6],
+    fill: 0xe8a888,
+    fillI: 5.5,
+    ground: 0xd4b098,
+    groundI: 5.2,
+    floor: 0xd8c0a8,
+    floorOp: 0.28,
+    sky: 0xf0e0d0,
+    particles: 0xe8d0b8,
+    particleOp: 0.48,
+    pSize: 0.04,
+    pScale: 1.35,
+    dust: 0xd4a080,
+    trailA: 0xe8a080,
+    trailB: 0xe0c8b0,
+    exposure: 1.08,
+    bloom: 0.07,
+    spin: 0.022,
+    cssBg: '#e6d5c5',
+  },
+  opp: {
+    bg: 0xc8d0d8,
+    fog: 0xd0d6dc,
+    fogNear: 20,
+    fogFar: 55,
+    ambient: 0xe8eef4,
+    ambientI: 1.05,
+    keyI: 1.55,
+    keyPos: [0, 10, 8],
+    rim: 0x304050,
+    rimI: 0.35,
+    rimPos: [6, 4, -4],
+    fill: 0x6080a0,
+    fillI: 3.2,
+    ground: 0x90a8b8,
+    groundI: 1.4,
+    floor: 0xb8c4cc,
+    floorOp: 0.12,
+    sky: 0xdce4ea,
+    particles: 0x708090,
+    particleOp: 0.18,
+    pSize: 0.014,
+    pScale: 0.72,
+    dust: 0x506070,
+    trailA: 0x405060,
+    trailB: 0xa0b0c0,
+    exposure: 1.22,
+    bloom: 0.02,
+    spin: 0.004,
+    cssBg: '#c8d0d8',
+  },
+  why: {
+    bg: 0xf6e4d4,
+    fog: 0xf0d4c8,
+    fogNear: 8,
+    fogFar: 28,
+    ambient: 0xf8e8dc,
+    ambientI: 0.55,
+    keyI: 1.35,
+    keyPos: [6, 5, 7],
+    rim: ACCENT,
+    rimI: 2.2,
+    rimPos: [-4, 2, 2],
+    fill: 0x7a2042,
+    fillI: 11,
+    ground: 0x7a2042,
+    groundI: 7.5,
+    floor: 0x7a2042,
+    floorOp: 0.42,
+    sky: 0xf8e0d4,
+    particles: 0x7a2042,
+    particleOp: 0.55,
+    pSize: 0.032,
+    pScale: 1.2,
+    dust: 0xff6090,
+    trailA: ACCENT,
+    trailB: 0xffd0c0,
+    exposure: 1.16,
+    bloom: 0.28,
+    spin: 0.01,
+    cssBg: '#f6e4d4',
+  },
+  vgrg: {
+    bg: 0xe8c8b0,
+    fog: 0xdcbaa0,
+    fogNear: 7,
+    fogFar: 24,
+    ambient: 0xf0d0b8,
+    ambientI: 0.6,
+    keyI: 1.2,
+    keyPos: [-4, 6, 7],
+    rim: 0x7a2042,
+    rimI: 1.8,
+    rimPos: [7, 2, -3],
+    fill: 0xc04060,
+    fillI: 8,
+    ground: 0xd09060,
+    groundI: 5.5,
+    floor: 0x904030,
+    floorOp: 0.38,
+    sky: 0xecd0b8,
+    particles: 0xc07070,
+    particleOp: 0.5,
+    pSize: 0.04,
+    pScale: 1.3,
+    dust: 0x7a2042,
+    trailA: ACCENT,
+    trailB: 0xe8b090,
+    exposure: 1.08,
+    bloom: 0.16,
+    spin: 0.02,
+    cssBg: '#e8c8b0',
+  },
+  earn: {
+    bg: 0xf4d094,
+    fog: 0xf4d69a,
+    fogNear: 6,
+    fogFar: 22,
+    ambient: 0xffe8b8,
+    ambientI: 0.95,
+    keyI: 1.55,
+    keyPos: [5, 9, 4],
+    rim: 0xffa058,
+    rimI: 1.4,
+    rimPos: [-6, 4, -2],
+    fill: 0xffc470,
+    fillI: 10,
+    ground: 0xffd070,
+    groundI: 8,
+    floor: 0xdcac64,
+    floorOp: 0.38,
+    sky: 0xffe8c0,
+    particles: 0xffe8bc,
+    particleOp: 0.58,
+    pSize: 0.042,
+    pScale: 1.3,
+    dust: 0xffac58,
+    trailA: 0xff8868,
+    trailB: 0xffe8a0,
+    exposure: 1.22,
+    bloom: 0.18,
+    spin: 0.02,
+    cssBg: '#f4d094',
+  },
+  fragen: {
+    bg: 0x3a1824,
+    fog: 0x4a2030,
+    fogNear: 4,
+    fogFar: 18,
+    ambient: 0x5a2838,
+    ambientI: 0.35,
+    keyI: 0.55,
+    keyPos: [2, 3, 6],
+    rim: 0xffc8a0,
+    rimI: 1.8,
+    rimPos: [-3, 1, 4],
+    fill: 0x7a2042,
+    fillI: 9,
+    ground: 0x7a2042,
+    groundI: 8,
+    floor: 0x7a2042,
+    floorOp: 0.62,
+    sky: 0x2a1018,
+    particles: 0xf4e4d4,
+    particleOp: 0.45,
+    pSize: 0.028,
+    pScale: 0.9,
+    dust: 0xf4e4d4,
+    trailA: 0xf4e4d4,
+    trailB: ACCENT,
+    exposure: 0.82,
+    bloom: 0.35,
+    spin: 0.005,
+    cssBg: '#3a1824',
+  },
+};
+
 function roundedShape(w, h, r) {
   const s = new THREE.Shape();
   const x = -w / 2;
@@ -223,7 +474,8 @@ export function createWorld(canvas) {
 
   const look = new THREE.Vector3(0, 0.15, 0);
 
-  scene.add(new THREE.AmbientLight(0xf3e6d8, 0.72));
+  const ambient = new THREE.AmbientLight(0xf3e6d8, 0.72);
+  scene.add(ambient);
 
   const key = new THREE.DirectionalLight(0xffffff, 1.12);
   key.position.set(4.5, 6, 8);
@@ -240,6 +492,115 @@ export function createWorld(canvas) {
   const groundGlow = new THREE.PointLight(0xc9a58a, 3.2, 18, 2);
   groundGlow.position.set(0, -3, 2);
   scene.add(groundGlow);
+
+  const sky = new THREE.Mesh(
+    new THREE.SphereGeometry(38, 24, 16),
+    new THREE.MeshBasicMaterial({
+      color: 0xf7ece0,
+      side: THREE.BackSide,
+      transparent: true,
+      opacity: 0.72,
+      depthWrite: false,
+    }),
+  );
+  scene.add(sky);
+
+  const floor = new THREE.Mesh(
+    new THREE.CircleGeometry(24, 56),
+    new THREE.MeshBasicMaterial({
+      color: 0xe8c8b0,
+      transparent: true,
+      opacity: 0.18,
+      depthWrite: false,
+    }),
+  );
+  floor.rotation.x = -Math.PI / 2;
+  floor.position.y = -3.35;
+  scene.add(floor);
+
+  const roomState = {
+    id: '',
+    spin: ROOMS.open.spin,
+    fogColor: new THREE.Color(CREAM),
+    fogNear: 22,
+    fogFar: 48,
+  };
+  const _cream = new THREE.Color(CREAM);
+  const clearProxy = { r: _cream.r, g: _cream.g, b: _cream.b };
+
+  function hexRgb(hex) {
+    const c = new THREE.Color(hex);
+    return { r: c.r, g: c.g, b: c.b };
+  }
+
+  function applyRoom(id, reduced = false) {
+    const room = ROOMS[id] || ROOMS.open;
+    if (roomState.id === id && !reduced) return;
+    roomState.id = id;
+    roomState.spin = room.spin;
+    const dur = reduced ? 0.01 : 1.85;
+    const ease = 'power3.inOut';
+    const fogCol = hexRgb(room.fog || room.bg);
+    gsap.killTweensOf(clearProxy);
+    gsap.killTweensOf(scene.fog);
+    gsap.to(clearProxy, {
+      r: fogCol.r,
+      g: fogCol.g,
+      b: fogCol.b,
+      duration: dur,
+      ease,
+      onUpdate: () => {
+        const col = new THREE.Color(clearProxy.r, clearProxy.g, clearProxy.b);
+        renderer.setClearColor(col, 1);
+        if (scene.fog) scene.fog.color.copy(col);
+        roomState.fogColor.copy(col);
+      },
+    });
+    roomState.fogNear = room.fogNear;
+    roomState.fogFar = room.fogFar;
+    if (scene.fog) {
+      gsap.to(scene.fog, { near: room.fogNear, far: room.fogFar, duration: dur, ease });
+    }
+    gsap.to(ambient.color, { ...hexRgb(room.ambient), duration: dur, ease });
+    gsap.to(ambient, { intensity: room.ambientI, duration: dur, ease });
+    gsap.to(key, { intensity: room.keyI, duration: dur, ease });
+    gsap.to(key.position, { x: room.keyPos[0], y: room.keyPos[1], z: room.keyPos[2], duration: dur, ease });
+    gsap.to(rim.color, { ...hexRgb(room.rim), duration: dur, ease });
+    gsap.to(rim, { intensity: room.rimI, duration: dur, ease });
+    gsap.to(rim.position, { x: room.rimPos[0], y: room.rimPos[1], z: room.rimPos[2], duration: dur, ease });
+    gsap.to(fill.color, { ...hexRgb(room.fill), duration: dur, ease });
+    gsap.to(fill, { intensity: room.fillI, duration: dur, ease });
+    gsap.to(groundGlow.color, { ...hexRgb(room.ground), duration: dur, ease });
+    gsap.to(groundGlow, { intensity: room.groundI, duration: dur, ease });
+    gsap.to(sky.material.color, { ...hexRgb(room.sky), duration: dur, ease });
+    gsap.to(floor.material.color, { ...hexRgb(room.floor), duration: dur, ease });
+    gsap.to(floor.material, { opacity: room.floorOp, duration: dur, ease });
+    gsap.to(pMat.color, { ...hexRgb(room.particles), duration: dur, ease });
+    gsap.to(pMat, { opacity: room.particleOp, size: room.pSize, duration: dur, ease });
+    gsap.to(particles.scale, {
+      x: room.pScale,
+      y: room.pScale,
+      z: room.pScale,
+      duration: dur,
+      ease,
+    });
+    gsap.fromTo(
+      particles.rotation,
+      { z: particles.rotation.z },
+      { z: particles.rotation.z + (id === 'vision' || id === 'earn' ? 0.35 : 0.12), duration: dur, ease },
+    );
+    gsap.to(dustMat.color, { ...hexRgb(room.dust), duration: dur, ease });
+    gsap.to(trailA.mat.color, { ...hexRgb(room.trailA), duration: dur, ease });
+    gsap.to(trailB.mat.color, { ...hexRgb(room.trailB), duration: dur, ease });
+    gsap.to(renderer, { toneMappingExposure: room.exposure, duration: dur, ease });
+    if (bloomPass) gsap.to(bloomPass, { strength: room.bloom, duration: dur, ease });
+    const app = document.getElementById('app');
+    if (app) {
+      app.setAttribute('data-room', id);
+      app.style.setProperty('--bg', room.cssBg);
+    }
+    document.documentElement.style.setProperty('--bg', room.cssBg);
+  }
 
   const isMobile = () => window.matchMedia('(max-width: 720px)').matches;
   let mobile = isMobile();
@@ -489,8 +850,9 @@ export function createWorld(canvas) {
     fillTrail(trailB, from, to, 0.22);
   }
 
-  function setSlide(index, { reduced = false } = {}) {
+  function setSlide(index, { reduced = false, section = 'open' } = {}) {
     if (focused) closeFocus({ instant: true });
+    applyRoom(section, reduced);
     if (index === current) return;
     const prev = current;
     hover = null;
@@ -575,7 +937,7 @@ export function createWorld(canvas) {
     focusBusy = !instant;
     document.getElementById('app')?.classList.remove('is-focus');
     document.getElementById('hud')?.classList.remove('dim');
-    scene.fog = new THREE.Fog(CREAM, 22, 48);
+    scene.fog = new THREE.Fog(roomState.fogColor.clone(), roomState.fogNear, roomState.fogFar);
     const rest = mesh.userData.rest || { x: 0, y: 0, z: 0, ry: 0 };
     gsap.killTweensOf(mesh.position);
     gsap.killTweensOf(mesh.rotation);
@@ -676,7 +1038,7 @@ export function createWorld(canvas) {
     const py = pointerLive ? pointer.y : 0;
 
     if (!reduced) {
-      particles.rotation.y = t * 0.012;
+      particles.rotation.y = t * roomState.spin;
       particles.position.x = THREE.MathUtils.lerp(particles.position.x, px * 0.42, 0.06);
       particles.position.y = THREE.MathUtils.lerp(particles.position.y, py * 0.18, 0.06);
       const arr = pGeo.attributes.position.array;

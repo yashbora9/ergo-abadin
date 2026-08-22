@@ -17,6 +17,7 @@ html, body, #app {
   background: var(--bg);
   color: var(--ink);
   font-family: Manrope, ui-sans-serif, system-ui, sans-serif;
+  transition: background-color 1.8s ease, color 1.8s ease;
 }
 
 #gl {
@@ -36,7 +37,87 @@ html, body, #app {
     linear-gradient(90deg, rgba(244, 228, 212, 0.88) 0%, rgba(244, 228, 212, 0.45) 28%, transparent 52%),
     linear-gradient(180deg, transparent 48%, rgba(244, 228, 212, 0.55) 100%);
   z-index: 2;
-  transition: opacity 0.4s ease;
+  transition: opacity 0.4s ease, filter 1.8s ease, background 1.8s ease;
+}
+
+#app[data-room='meet'] .vignette {
+  filter: saturate(1.15) contrast(1.04);
+  background:
+    radial-gradient(120% 90% at 70% 40%, transparent 18%, rgba(255, 180, 120, 0.28) 68%, rgba(255, 160, 100, 0.55) 100%),
+    linear-gradient(90deg, rgba(255, 228, 200, 0.92) 0%, rgba(255, 220, 180, 0.35) 30%, transparent 55%),
+    linear-gradient(180deg, transparent 40%, rgba(255, 140, 90, 0.28) 100%);
+}
+
+#app[data-room='vision'] .vignette {
+  filter: saturate(1.05) contrast(1.02) brightness(1.04);
+  background:
+    radial-gradient(110% 90% at 72% 40%, transparent 14%, rgba(214, 184, 156, 0.22) 68%, rgba(214, 190, 168, 0.42) 100%),
+    linear-gradient(90deg, rgba(230, 213, 197, 0.88) 0%, rgba(230, 213, 197, 0.35) 28%, transparent 52%),
+    linear-gradient(180deg, transparent 42%, rgba(200, 168, 140, 0.28) 100%);
+}
+
+#app[data-room='opp'] .vignette {
+  filter: saturate(0.35) contrast(1.08) brightness(1.06);
+  background:
+    radial-gradient(120% 90% at 72% 38%, transparent 22%, rgba(180, 196, 210, 0.28) 70%, rgba(150, 168, 184, 0.72) 100%),
+    linear-gradient(90deg, rgba(200, 210, 218, 0.92) 0%, rgba(208, 216, 224, 0.4) 28%, transparent 52%),
+    linear-gradient(180deg, transparent 48%, rgba(140, 156, 172, 0.5) 100%);
+}
+
+#app[data-room='why'] .vignette {
+  filter: saturate(1.18);
+  background:
+    radial-gradient(120% 90% at 74% 36%, transparent 16%, rgba(122, 32, 66, 0.22) 68%, rgba(122, 32, 66, 0.48) 100%),
+    linear-gradient(90deg, rgba(246, 228, 212, 0.9) 0%, rgba(246, 228, 212, 0.32) 28%, transparent 50%),
+    linear-gradient(180deg, transparent 42%, rgba(90, 16, 40, 0.38) 100%);
+}
+
+#app[data-room='vgrg'] .vignette {
+  filter: saturate(1.1) contrast(1.06);
+  background:
+    radial-gradient(120% 90% at 72% 38%, transparent 16%, rgba(180, 90, 70, 0.28) 70%, rgba(120, 40, 30, 0.5) 100%),
+    linear-gradient(90deg, rgba(232, 200, 176, 0.9) 0%, rgba(232, 200, 176, 0.35) 28%, transparent 52%),
+    linear-gradient(180deg, transparent 45%, rgba(140, 50, 40, 0.4) 100%);
+}
+
+#app[data-room='earn'] .vignette {
+  filter: saturate(1.18) brightness(1.08) contrast(1.04);
+  background:
+    radial-gradient(120% 90% at 72% 38%, transparent 16%, rgba(255, 208, 120, 0.22) 70%, rgba(232, 176, 80, 0.38) 100%),
+    linear-gradient(90deg, rgba(244, 208, 148, 0.88) 0%, rgba(255, 220, 140, 0.32) 28%, transparent 52%),
+    linear-gradient(180deg, transparent 42%, rgba(220, 160, 80, 0.3) 100%);
+}
+
+#app[data-room='fragen'] {
+  --ink: #f4e4d4;
+  --muted: rgba(244, 228, 212, 0.62);
+  --accent: #f4c4c8;
+  --line: rgba(244, 228, 212, 0.22);
+}
+
+#app[data-room='fragen'] .vignette {
+  filter: brightness(0.78) saturate(1.1);
+  background:
+    radial-gradient(110% 90% at 70% 40%, transparent 10%, rgba(40, 12, 22, 0.45) 65%, rgba(20, 6, 12, 0.82) 100%),
+    linear-gradient(90deg, rgba(40, 14, 22, 0.88) 0%, rgba(58, 24, 36, 0.4) 30%, transparent 55%),
+    linear-gradient(180deg, rgba(20, 8, 12, 0.35) 0%, transparent 40%, rgba(90, 20, 40, 0.55) 100%);
+}
+
+#app[data-room='vision'] .grain {
+  opacity: 0.06;
+}
+
+#app[data-room='earn'] .grain {
+  opacity: 0.08;
+}
+
+#app[data-room='fragen'] .grain {
+  opacity: 0.1;
+  mix-blend-mode: overlay;
+}
+
+#app[data-room='opp'] .grain {
+  opacity: 0.02;
 }
 
 #app.is-focus .vignette,

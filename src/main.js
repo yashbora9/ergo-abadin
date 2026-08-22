@@ -140,7 +140,7 @@ function goTo(i, { first = false } = {}) {
   const slide = slides[i];
   renderHud(slide, first);
   moveCamera(slide, slide.trail && !first);
-  world.setSlide(i, { reduced });
+  world.setSlide(i, { reduced, section: slide.section });
   document.getElementById('app')?.classList.remove('is-focus');
 }
 
