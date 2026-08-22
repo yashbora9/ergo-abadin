@@ -64,10 +64,10 @@ export const slides = [
     kicker: '02  ·  The Vision',
     title: 'Why I am here.',
     line: 'Solve problems for restaurant workers.',
-    facts: [
-      { v: '90%', k: 'Do not work commercially' },
+    cards: [
+      { label: '90%', sub: 'Do not work commercially.', kicker: 'Restaurant', x: 3.25, y: 0.45, z: 0.2, ry: -0.08 },
     ],
-    cam: { x: -0.15, y: 0.22, z: 8.4, tx: 0.4, ty: 0.12, tz: 0 },
+    cam: { x: -0.45, y: 0.22, z: 8.4, tx: 1.7, ty: 0.2, tz: 0 },
     trail: true,
   },
   {
@@ -89,11 +89,11 @@ export const slides = [
     kicker: '02  ·  The Vision',
     title: 'A bigger reach.',
     line: 'Help the Bangladeshi community in Germany.',
-    facts: [
-      { v: 'Independent', k: 'Financially. Families secure.' },
-      { v: '50%', k: 'Community in 5 years' },
+    cards: [
+      { label: 'Independent', sub: 'Financially. Families secure.', kicker: 'The aim', x: 3.15, y: 0.45, z: 0.15, ry: 0.08 },
+      { label: '50%', sub: 'Community in 5 years.', kicker: 'The reach', x: 5.35, y: 0.45, z: 0.15, ry: -0.1 },
     ],
-    cam: { x: -0.1, y: 0.22, z: 8.5, tx: 0.35, ty: 0.12, tz: 0 },
+    cam: { x: -0.2, y: 0.28, z: 8.4, tx: 3.3, ty: 0.28, tz: 0 },
     trail: false,
   },
   {
@@ -206,11 +206,11 @@ export const slides = [
     kicker: '04  ·  ERGO',
     title: 'More work. More pay.',
     line: 'Self-accountability. Income follows effort.',
-    facts: [
-      { v: 'Effort', k: 'Sets the income' },
-      { v: 'You', k: 'Own the result' },
+    cards: [
+      { label: 'Effort', sub: 'Sets the income.', kicker: 'The rule', x: 3.05, y: 0.45, z: 0.2, ry: 0.08 },
+      { label: 'You', sub: 'Own the result.', kicker: 'The owner', x: 5.35, y: 0.45, z: 0.2, ry: -0.1 },
     ],
-    cam: { x: 0, y: 0.25, z: 8.4, tx: 0.3, ty: 0.15, tz: 0 },
+    cam: { x: -0.15, y: 0.28, z: 8.3, tx: 3.3, ty: 0.28, tz: 0 },
     trail: false,
   },
   {
