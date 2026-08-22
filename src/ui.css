@@ -180,17 +180,17 @@ html, body, #app {
 
 .progress {
   position: absolute;
-  left: 84px;
-  right: 84px;
-  bottom: 32px;
+  left: 48px;
+  right: 48px;
+  bottom: 26px;
   z-index: 6;
   display: flex;
-  align-items: center;
-  gap: 22px;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 12px;
 }
 
 .bar {
-  flex: 1;
   height: 1px;
   background: var(--line);
   position: relative;
@@ -207,31 +207,47 @@ html, body, #app {
 
 .ticks {
   display: flex;
-  align-items: center;
-  gap: 9px;
-  flex-shrink: 0;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 8px;
+  width: 100%;
 }
 
 .ticks button {
   appearance: none;
-  width: 6px;
-  height: 6px;
-  padding: 0;
+  background: none;
   border: 0;
-  border-radius: 50%;
-  background: rgba(44, 42, 41, 0.22);
+  color: var(--muted);
+  font: inherit;
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
   cursor: pointer;
-  transition: transform 0.25s ease, background 0.25s ease;
+  padding: 4px 0 6px;
+  position: relative;
+  white-space: nowrap;
+  flex: 1;
+  text-align: center;
+  transition: color 0.2s ease;
 }
 
 .ticks button:hover {
-  background: var(--accent-soft);
-  transform: scale(1.35);
+  color: var(--ink);
 }
 
 .ticks button.active {
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.ticks button.active::after {
+  content: '';
+  position: absolute;
+  left: 20%;
+  right: 20%;
+  bottom: 0;
+  height: 1.5px;
   background: var(--accent);
-  transform: scale(1.45);
 }
 
 .nav-btn {
@@ -353,9 +369,9 @@ html, body, #app {
   }
   .nav-btn { display: none; }
   .hint { display: none; }
-  .ticks { display: none; }
-  .progress { left: 20px; right: 20px; bottom: 22px; }
-  .hint { right: 20px; bottom: 40px; }
+  .progress { left: 16px; right: 16px; bottom: 16px; }
+  .ticks { overflow-x: auto; justify-content: flex-start; gap: 16px; }
+  .ticks button { flex: 0 0 auto; font-size: 9px; }
 }
 
 .focus-veil {

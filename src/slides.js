@@ -7,9 +7,7 @@ export const sections = [
   { id: 'meet', label: 'Introduction' },
   { id: 'vision', label: 'Vision' },
   { id: 'opp', label: 'Opportunity' },
-  { id: 'why', label: 'Why ERGO' },
-  { id: 'here', label: 'Why here' },
-  { id: 'intro', label: 'ERGO' },
+  { id: 'why', label: 'ERGO' },
   { id: 'vgrg', label: 'VG & RG' },
   { id: 'earn', label: 'Earn' },
   { id: 'fragen', label: 'Fragen' },
@@ -20,7 +18,7 @@ export const slides = [
     id: 'open',
     section: 'open',
     kicker: 'ERGO  ·  Abedin',
-    title: 'Journey to being Independent',
+    title: 'Journey to become Independent',
     line: 'Why ERGO. Why now.',
     photos: [
       { src: p('photos/ergo/hq.jpg'), w: 4.6, h: 2.7, x: 2.9, y: 0.7, z: -1.0, ry: -0.14 },
@@ -58,6 +56,44 @@ export const slides = [
       { src: p('photos/abedin/roundabout.jpg'), w: 3.55, h: 2.22, x: 4.5, y: 0.4, z: -0.12, ry: -0.12 },
     ],
     cam: { x: -0.35, y: 0.22, z: 8.5, tx: 2.35, ty: 0.35, tz: 0 },
+    trail: false,
+  },
+  {
+    id: 'here-1',
+    section: 'vision',
+    kicker: '02  ·  The Vision',
+    title: 'Why I am here.',
+    line: 'Solve problems for restaurant workers.',
+    facts: [
+      { v: '90%', k: 'Do not work commercially' },
+    ],
+    cam: { x: -0.15, y: 0.22, z: 8.4, tx: 0.4, ty: 0.12, tz: 0 },
+    trail: true,
+  },
+  {
+    id: 'here-2',
+    section: 'vision',
+    kicker: '02  ·  The Vision',
+    title: 'Ten years.\nOne goal.',
+    line: 'Open restaurants. Then the reach ran out.',
+    cards: [
+      { label: '5 restaurants', sub: 'Would only serve family.', kicker: 'The plan', x: 3.15, y: 0.45, z: 0.15, ry: 0.08 },
+      { label: 'Too small', sub: 'Not enough reach.', kicker: 'The limit', x: 5.35, y: 0.45, z: 0.15, ry: -0.1 },
+    ],
+    cam: { x: -0.2, y: 0.28, z: 8.4, tx: 3.3, ty: 0.28, tz: 0 },
+    trail: false,
+  },
+  {
+    id: 'here-3',
+    section: 'vision',
+    kicker: '02  ·  The Vision',
+    title: 'A bigger reach.',
+    line: 'Help the Bangladeshi community in Germany.',
+    facts: [
+      { v: 'Independent', k: 'Financially. Families secure.' },
+      { v: '50%', k: 'Community in 5 years' },
+    ],
+    cam: { x: -0.1, y: 0.22, z: 8.5, tx: 0.35, ty: 0.12, tz: 0 },
     trail: false,
   },
   {
@@ -137,26 +173,9 @@ export const slides = [
     trail: false,
   },
   {
-    id: 'why-0',
-    section: 'why',
-    kicker: '04  ·  Why ERGO',
-    title: 'A brand that\nstands in public.',
-    line: 'Inter Miami. The German national team.',
-    facts: [
-      { v: 'DFB', k: 'Official partner' },
-      { v: 'Miami', k: 'On the world stage' },
-    ],
-    photos: [
-      { src: p('photos/ergo/miami.jpg'), w: 4.7, h: 2.01, x: 2.55, y: 0.9, z: -0.85, ry: -0.08 },
-      { src: p('photos/ergo/dfb.jpg'), w: 2.15, h: 2.15, x: 4.65, y: -0.45, z: 0.4, ry: -0.1 },
-    ],
-    cam: { x: -0.5, y: 0.22, z: 8.5, tx: 1.55, ty: 0.4, tz: 0 },
-    trail: true,
-  },
-  {
     id: 'why-1',
     section: 'why',
-    kicker: '04  ·  Why ERGO',
+    kicker: '04  ·  ERGO',
     title: 'Why I chose ERGO',
     line: 'Fairness is the core reason.',
     facts: [
@@ -166,12 +185,12 @@ export const slides = [
       { src: p('photos/ergo/sign.jpg'), w: 3.35, h: 3.35, x: 3.25, y: 0.4, z: -0.45, ry: -0.1 },
     ],
     cam: { x: -0.45, y: 0.2, z: 8.3, tx: 1.7, ty: 0.22, tz: 0 },
-    trail: false,
+    trail: true,
   },
   {
     id: 'why-2',
     section: 'why',
-    kicker: '04  ·  Why ERGO',
+    kicker: '04  ·  ERGO',
     title: 'The salary\nstays flat.',
     line: 'Even if the boss earns millions.',
     cards: [
@@ -184,7 +203,7 @@ export const slides = [
   {
     id: 'why-3',
     section: 'why',
-    kicker: '04  ·  Why ERGO',
+    kicker: '04  ·  ERGO',
     title: 'More work. More pay.',
     line: 'Self-accountability. Income follows effort.',
     facts: [
@@ -195,47 +214,26 @@ export const slides = [
     trail: false,
   },
   {
-    id: 'here-1',
-    section: 'here',
-    kicker: '05  ·  Why I am here',
-    title: 'Why I am here.',
-    line: 'Solve problems for restaurant workers.',
+    id: 'why-4',
+    section: 'why',
+    kicker: '04  ·  ERGO',
+    title: 'A brand that\nstands in public.',
+    line: 'Inter Miami. The German national team.',
     facts: [
-      { v: '90%', k: 'Do not work commercially' },
+      { v: 'DFB', k: 'Official partner' },
+      { v: 'Miami', k: 'On the world stage' },
     ],
-    cam: { x: -0.15, y: 0.22, z: 8.4, tx: 0.4, ty: 0.12, tz: 0 },
-    trail: true,
-  },
-  {
-    id: 'here-2',
-    section: 'here',
-    kicker: '05  ·  Why I am here',
-    title: 'Ten years.\nOne goal.',
-    line: 'Open restaurants. Then the reach ran out.',
-    cards: [
-      { label: '5 restaurants', sub: 'Would only serve family.', kicker: 'The plan', x: 3.15, y: 0.45, z: 0.15, ry: 0.08 },
-      { label: 'Too small', sub: 'Not enough reach.', kicker: 'The limit', x: 5.35, y: 0.45, z: 0.15, ry: -0.1 },
+    photos: [
+      { src: p('photos/ergo/miami.jpg'), w: 4.7, h: 2.01, x: 2.55, y: 0.9, z: -0.85, ry: -0.08 },
+      { src: p('photos/ergo/dfb.jpg'), w: 2.15, h: 2.15, x: 4.65, y: -0.45, z: 0.4, ry: -0.1 },
     ],
-    cam: { x: -0.2, y: 0.28, z: 8.4, tx: 3.3, ty: 0.28, tz: 0 },
-    trail: false,
-  },
-  {
-    id: 'here-3',
-    section: 'here',
-    kicker: '05  ·  Why I am here',
-    title: 'A bigger reach.',
-    line: 'Help the Bangladeshi community in Germany.',
-    facts: [
-      { v: 'Independent', k: 'Financially. Families secure.' },
-      { v: '50%', k: 'Community in 5 years' },
-    ],
-    cam: { x: -0.1, y: 0.22, z: 8.5, tx: 0.35, ty: 0.12, tz: 0 },
+    cam: { x: -0.5, y: 0.22, z: 8.5, tx: 1.55, ty: 0.4, tz: 0 },
     trail: false,
   },
   {
     id: 'intro-1',
-    section: 'intro',
-    kicker: '06  ·  ERGO',
+    section: 'why',
+    kicker: '04  ·  ERGO',
     title: 'A century of capital.',
     line: 'Multi-billion group. Munich Re at the core.',
     facts: [
@@ -250,8 +248,8 @@ export const slides = [
   },
   {
     id: 'intro-2',
-    section: 'intro',
-    kicker: '06  ·  ERGO',
+    section: 'why',
+    kicker: '04  ·  ERGO',
     title: 'The magic triangle.',
     line: 'Every great investment needs all three.',
     cards: [
@@ -264,8 +262,8 @@ export const slides = [
   },
   {
     id: 'intro-3',
-    section: 'intro',
-    kicker: '06  ·  ERGO',
+    section: 'why',
+    kicker: '04  ·  ERGO',
     title: 'A product that adapts.',
     line: 'The client chooses what matters most.',
     photos: [
@@ -277,7 +275,7 @@ export const slides = [
   {
     id: 'vgrg-1',
     section: 'vgrg',
-    kicker: '07  ·  VG & RG',
+    kicker: '05  ·  VG & RG',
     title: 'Two paths. One career.',
     line: 'Help clients. Build a team.',
     cards: [
@@ -290,7 +288,7 @@ export const slides = [
   {
     id: 'vgrg-2',
     section: 'vgrg',
-    kicker: '07  ·  VG',
+    kicker: '05  ·  VG',
     title: 'Protect people’s wealth.',
     line: 'The client conversation. Security, returns, flexibility.',
     photos: [
@@ -302,7 +300,7 @@ export const slides = [
   {
     id: 'vgrg-3',
     section: 'vgrg',
-    kicker: '07  ·  RG',
+    kicker: '05  ·  RG',
     title: 'Build a team that lasts.',
     line: 'The people path. Partners who want more.',
     photos: [
@@ -314,7 +312,7 @@ export const slides = [
   {
     id: 'earn-1',
     section: 'earn',
-    kicker: '08  ·  How partners earn',
+    kicker: '06  ·  How partners earn',
     title: 'First: your own work.',
     line: 'Paid for the clients you serve.',
     cards: [
@@ -326,7 +324,7 @@ export const slides = [
   {
     id: 'earn-2',
     section: 'earn',
-    kicker: '08  ·  How partners earn',
+    kicker: '06  ·  How partners earn',
     title: 'Then: the people you lead.',
     line: 'Leadership multiplies what you already do well.',
     cards: [
@@ -339,7 +337,7 @@ export const slides = [
   {
     id: 'earn-3',
     section: 'earn',
-    kicker: '08  ·  How partners earn',
+    kicker: '06  ·  How partners earn',
     title: 'Training. System. Support.',
     line: 'Nobody is left alone with the craft.',
     facts: [
@@ -355,7 +353,7 @@ export const slides = [
   {
     id: 'fragen-1',
     section: 'fragen',
-    kicker: '09  ·  Fragen',
+    kicker: '07  ·  Fragen',
     title: 'Your turn. Ask anything.',
     line: 'No script from here. Just honesty.',
     photos: [
@@ -367,11 +365,11 @@ export const slides = [
   {
     id: 'fragen-2',
     section: 'fragen',
-    kicker: '09  ·  Fragen',
+    kicker: '07  ·  Fragen',
     title: 'Shall we start together?',
     line: 'The next step is yours.',
     photos: [
-      { src: p('photos/ergo/office.jpg'), w: 4.2, h: 2.36, x: 3.05, y: 0.75, z: -0.5, ry: -0.08 },
+      { src: p('photos/ergo/together.jpg'), w: 4.25, h: 2.83, x: 3.1, y: 0.55, z: -0.4, ry: -0.08 },
     ],
     cam: { x: -0.35, y: 0.2, z: 8.4, tx: 1.5, ty: 0.22, tz: 0 },
     trail: false,

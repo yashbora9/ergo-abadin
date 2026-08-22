@@ -27,9 +27,8 @@ const els = {
 sections.forEach((sec) => {
   const b = document.createElement('button');
   b.type = 'button';
+  b.textContent = sec.label;
   b.dataset.section = sec.id;
-  b.setAttribute('aria-label', sec.label);
-  b.title = sec.label;
   b.addEventListener('click', () => {
     const idx = slides.findIndex((s) => s.section === sec.id);
     if (idx >= 0) nav.jump(idx);
