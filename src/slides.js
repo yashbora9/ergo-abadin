@@ -15,21 +15,21 @@ export const sections = [
 ];
 
 export const SUCCESS_QUESTIONS = [
-  { n: 1, title: 'Learn how to fight', photo: '01.jpg' },
-  { n: 2, title: 'Learn how to cook', photo: '02.jpg' },
-  { n: 3, title: 'Learn how to make money', photo: '03.jpg' },
-  { n: 4, title: 'Learn how to save money', photo: '04.jpg' },
-  { n: 5, title: 'Learn how to eat healthy', photo: '05.jpg' },
-  { n: 6, title: 'Always pursue knowledge', photo: '06.jpg' },
-  { n: 7, title: 'Stay close to God', photo: '07.jpg' },
-  { n: 8, title: 'Learn how to do selfcare', photo: '08.jpg' },
-  { n: 9, title: 'Learn how to dress', photo: '09.jpg' },
+  { n: 1, title: 'Learn how to fight', photo: '01.jpg', score: 50, short: 'Fight' },
+  { n: 2, title: 'Learn how to cook', photo: '02.jpg', score: 100, short: 'Cook' },
+  { n: 3, title: 'Learn how to make money', photo: '03.jpg', score: 30, short: 'Make money' },
+  { n: 4, title: 'Learn how to save money', photo: '04.jpg', score: 60, short: 'Save money' },
+  { n: 5, title: 'Learn how to eat healthy', photo: '05.jpg', score: 70, short: 'Eat healthy' },
+  { n: 6, title: 'Always pursue knowledge', photo: '06.jpg', score: 50, short: 'Knowledge' },
+  { n: 7, title: 'Stay close to God', photo: '07.jpg', score: 50, short: 'Stay close to God' },
+  { n: 8, title: 'Learn how to do selfcare', photo: '08.jpg', score: 80, short: 'Self-care' },
+  { n: 9, title: 'Learn how to dress', photo: '09.jpg', score: 70, short: 'Dress' },
   {
     n: 10,
     title: 'Learn how to be alone',
     photo: '10.jpg',
-    quote: 'Life doesn\'t always give you a second chance, Sometime you only get one opportunity - So don\'t let it pass you by.',
-    cite: 'Zeinal Aabedin',
+    score: 98,
+    short: 'Be alone',
   },
 ];
 
@@ -167,6 +167,18 @@ export const slides = [
     cam: camGallery(i),
     trail: false,
   })),
+  {
+    id: 'success-score',
+    section: 'success',
+    kicker: '03  ·  Abedin',
+    title: 'Abedin’s score.',
+    line: 'How to be a 10/10 human.',
+    scores: true,
+    quote: 'Life doesn\'t always give you a second chance, Sometime you only get one opportunity — So don\'t let it pass you by.',
+    cite: 'Zeinal Aabedin',
+    cam: { x: 0, y: 0.35, z: 11.4, tx: 0, ty: 0.2, tz: -2 },
+    trail: true,
+  },
   {
     id: 'opp-1',
     section: 'opp',

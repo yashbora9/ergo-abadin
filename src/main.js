@@ -1,5 +1,5 @@
 import gsap from 'gsap';
-import { slides, sections } from './slides.js';
+import { slides, sections, SUCCESS_QUESTIONS } from './slides.js';
 import { createWorld } from './scene.js';
 import { createNav } from './nav.js';
 import './ui.css';
@@ -17,6 +17,8 @@ const els = {
   quoteText: document.querySelector('#quoteText'),
   quoteCite: document.querySelector('#quoteCite'),
   facts: document.querySelector('#facts'),
+  scores: document.querySelector('#scores'),
+  hud: document.querySelector('#hud'),
   meta: document.querySelector('#sectionLabel'),
   count: document.querySelector('#count'),
   fill: document.querySelector('#fill'),
@@ -56,11 +58,83 @@ function renderFacts(slide) {
   });
 }
 
+function renderScores(slide) {
+  const box = els.scores;
+  if (!box) return;
+  gsap.killTweensOf(box.querySelectorAll('.score-fill, .score-pct'));
+  box.replaceChildren();
+  if (!slide.scores) {
+    box.hidden = true;
+    els.hud?.classList.remove('is-scores');
+    return;
+  }
+  box.hidden = false;
+  els.hud?.classList.add('is-scores');
+  SUCCESS_QUESTIONS.forEach((q) => {
+    const row = document.createElement('div');
+    row.className = 'score-row';
+    const name = document.createElement('span');
+    name.textContent = q.title;
+    const track = document.createElement('div');
+    track.className = 'score-track';
+    const fill = document.createElement('i');
+    fill.className = 'score-fill';
+    const to = Number(q.score) || 0;
+    fill.dataset.to = String(to);
+    fill.style.width = '0%';
+    track.appendChild(fill);
+    const pct = document.createElement('b');
+    pct.className = 'score-pct';
+    pct.textContent = '0%';
+    row.append(name, track, pct);
+    box.appendChild(row);
+  });
+}
+
+function playScores() {
+  const rows = els.scores?.querySelectorAll('.score-row');
+  if (!rows?.length) return;
+  rows.forEach((row, i) => {
+    const fill = row.querySelector('.score-fill');
+    const pct = row.querySelector('.score-pct');
+    const to = Number(SUCCESS_QUESTIONS[i]?.score ?? fill?.dataset.to ?? 0);
+    const delay = reduced ? 0 : 0.2 + i * 0.1;
+    const dur = reduced ? 0.01 : 1.2;
+    const proxy = { v: 0 };
+    gsap.killTweensOf(fill);
+    gsap.fromTo(
+      fill,
+      { width: '0%' },
+      {
+        width: `${to}%`,
+        duration: dur,
+        delay,
+        ease: 'power3.out',
+        overwrite: true,
+      },
+    );
+    gsap.to(proxy, {
+      v: to,
+      duration: dur,
+      delay,
+      ease: 'power3.out',
+      overwrite: true,
+      onUpdate: () => {
+        if (pct) pct.textContent = `${Math.round(proxy.v)}%`;
+      },
+      onComplete: () => {
+        if (pct) pct.textContent = `${to}%`;
+        if (fill) fill.style.width = `${to}%`;
+      },
+    });
+  });
+}
+
 function renderHud(slide, first = false) {
   const dur = reduced || first ? 0.01 : 0.55;
   const tl = gsap.timeline();
   if (!first) {
-    tl.to([els.kicker, els.title, els.line, els.quote, els.facts], {
+    tl.to([els.kicker, els.title, els.line, els.quote, els.facts, els.scores], {
       opacity: 0,
       y: 12,
       duration: 0.28,
@@ -81,6 +155,8 @@ function renderHud(slide, first = false) {
       els.quoteCite.textContent = '';
     }
     renderFacts(slide);
+    renderScores(slide);
+    if (slide.scores) playScores();
     const sec = sections.find((s) => s.id === slide.section);
     els.meta.textContent = sec ? sec.label : '';
     els.count.textContent = `${String(index + 1).padStart(2, '0')}  /  ${String(slides.length).padStart(2, '0')}`;
@@ -92,7 +168,7 @@ function renderHud(slide, first = false) {
     els.next.disabled = index === slides.length - 1;
   });
   tl.fromTo(
-    [els.kicker, els.title, els.line, els.quote, els.facts],
+    [els.kicker, els.title, els.line, els.quote, els.facts, els.scores],
     { opacity: 0, y: 18 },
     { opacity: 1, y: 0, duration: dur, stagger: 0.05, ease: 'power3.out' },
   );
