@@ -6,12 +6,60 @@ export const sections = [
   { id: 'open', label: 'Welcome' },
   { id: 'meet', label: 'Introduction' },
   { id: 'vision', label: 'Vision' },
+  { id: 'success', label: 'Success' },
   { id: 'opp', label: 'Opportunity' },
   { id: 'why', label: 'ERGO' },
   { id: 'vgrg', label: 'VG & RG' },
   { id: 'earn', label: 'Earn' },
   { id: 'fragen', label: 'Fragen' },
 ];
+
+export const SUCCESS_QUESTIONS = [
+  { n: 1, title: 'Learn how to fight', photo: '01.jpg' },
+  { n: 2, title: 'Learn how to cook', photo: '02.jpg' },
+  { n: 3, title: 'Learn how to make money', photo: '03.jpg' },
+  { n: 4, title: 'Learn how to save money', photo: '04.jpg' },
+  { n: 5, title: 'Learn how to eat healthy', photo: '05.jpg' },
+  { n: 6, title: 'Always pursue knowledge', photo: '06.jpg' },
+  { n: 7, title: 'Stay close to God', photo: '07.jpg' },
+  { n: 8, title: 'Learn how to do selfcare', photo: '08.jpg' },
+  { n: 9, title: 'Learn how to dress', photo: '09.jpg' },
+  {
+    n: 10,
+    title: 'Learn how to be alone',
+    photo: '10.jpg',
+    quote: 'Life doesn\'t always give you a second chance, Sometime you only get one opportunity - So don\'t let it pass you by.',
+    cite: 'Zeinal Aabedin',
+  },
+];
+
+export function galleryLayout() {
+  const n = SUCCESS_QUESTIONS.length;
+  const mid = (n - 1) / 2;
+  return SUCCESS_QUESTIONS.map((_, i) => {
+    const t = mid === 0 ? 0 : (i - mid) / mid;
+    const ang = t * 0.8;
+    const r = 8.6;
+    return {
+      x: Math.sin(ang) * r,
+      y: 0.58 + Math.abs(t) * 0.06,
+      z: -Math.cos(ang) * r * 0.7,
+      ry: -ang,
+    };
+  });
+}
+
+function camGallery(i) {
+  const p = galleryLayout()[i];
+  return {
+    x: p.x * 0.42,
+    y: p.y + 0.12,
+    z: p.z + 5.5,
+    tx: p.x,
+    ty: p.y,
+    tz: p.z,
+  };
+}
 
 export const slides = [
   {
@@ -97,9 +145,32 @@ export const slides = [
     trail: false,
   },
   {
+    id: 'success-0',
+    section: 'success',
+    kicker: '03  ·  Success',
+    title: 'How to be a 10/10 human',
+    line: 'Call a number — or walk them in order.',
+    gallery: -1,
+    cam: { x: 0.05, y: 0.55, z: 12.2, tx: 0.2, ty: 0.45, tz: -2.4 },
+    trail: true,
+  },
+  ...SUCCESS_QUESTIONS.map((q, i) => ({
+    id: `success-${q.n}`,
+    section: 'success',
+    kicker: `03  ·  ${String(q.n).padStart(2, '0')} / ${String(SUCCESS_QUESTIONS.length).padStart(2, '0')}`,
+    title: q.title,
+    line: q.line || '',
+    quote: q.quote || '',
+    cite: q.cite || '',
+    gallery: i,
+    galleryLit: i === SUCCESS_QUESTIONS.length - 1,
+    cam: camGallery(i),
+    trail: false,
+  })),
+  {
     id: 'opp-1',
     section: 'opp',
-    kicker: '03  ·  Opportunity',
+    kicker: '04  ·  Opportunity',
     title: 'The service gap.',
     line: 'Language and distrust of local banks.',
     cards: [
@@ -112,7 +183,7 @@ export const slides = [
   {
     id: 'opp-2',
     section: 'opp',
-    kicker: '03  ·  Opportunity',
+    kicker: '04  ·  Opportunity',
     title: 'The market is growing.',
     line: 'South Asian nationals in Germany. IN, PK, BD, SL.',
     facts: [
@@ -128,7 +199,7 @@ export const slides = [
   {
     id: 'opp-3',
     section: 'opp',
-    kicker: '03  ·  Opportunity',
+    kicker: '04  ·  Opportunity',
     title: 'The student pipeline.',
     line: 'South Asian students in Germany, approx.',
     facts: [
@@ -144,7 +215,7 @@ export const slides = [
   {
     id: 'opp-4',
     section: 'opp',
-    kicker: '03  ·  Opportunity',
+    kicker: '04  ·  Opportunity',
     title: 'They stay.',
     line: 'IAB immigrant stay intentions. A long-term book.',
     facts: [
@@ -161,7 +232,7 @@ export const slides = [
   {
     id: 'opp-5',
     section: 'opp',
-    kicker: '03  ·  Opportunity',
+    kicker: '04  ·  Opportunity',
     title: 'Lifetime value.',
     line: 'Map products to the life they actually live.',
     cards: [
@@ -175,7 +246,7 @@ export const slides = [
   {
     id: 'why-1',
     section: 'why',
-    kicker: '04  ·  ERGO',
+    kicker: '05  ·  ERGO',
     title: 'Why I chose ERGO',
     line: 'Fairness is the core reason.',
     facts: [
@@ -190,7 +261,7 @@ export const slides = [
   {
     id: 'why-2',
     section: 'why',
-    kicker: '04  ·  ERGO',
+    kicker: '05  ·  ERGO',
     title: 'The salary\nstays flat.',
     line: 'Even if the boss earns millions.',
     cards: [
@@ -203,7 +274,7 @@ export const slides = [
   {
     id: 'why-3',
     section: 'why',
-    kicker: '04  ·  ERGO',
+    kicker: '05  ·  ERGO',
     title: 'More work. More pay.',
     line: 'Self-accountability. Income follows effort.',
     cards: [
@@ -216,7 +287,7 @@ export const slides = [
   {
     id: 'why-4',
     section: 'why',
-    kicker: '04  ·  ERGO',
+    kicker: '05  ·  ERGO',
     title: 'A brand that\nstands in public.',
     line: 'Inter Miami. The German national team.',
     facts: [
@@ -233,7 +304,7 @@ export const slides = [
   {
     id: 'intro-1',
     section: 'why',
-    kicker: '04  ·  ERGO',
+    kicker: '05  ·  ERGO',
     title: 'A century of capital.',
     line: 'Multi-billion group. Munich Re at the core.',
     facts: [
@@ -249,7 +320,7 @@ export const slides = [
   {
     id: 'intro-2',
     section: 'why',
-    kicker: '04  ·  ERGO',
+    kicker: '05  ·  ERGO',
     title: 'The magic triangle.',
     line: 'Every great investment needs all three.',
     cards: [
@@ -263,7 +334,7 @@ export const slides = [
   {
     id: 'intro-3',
     section: 'why',
-    kicker: '04  ·  ERGO',
+    kicker: '05  ·  ERGO',
     title: 'A product that adapts.',
     line: 'The client chooses what matters most.',
     photos: [
@@ -275,7 +346,7 @@ export const slides = [
   {
     id: 'vgrg-1',
     section: 'vgrg',
-    kicker: '05  ·  VG & RG',
+    kicker: '06  ·  VG & RG',
     title: 'Two paths. One career.',
     line: 'Help clients. Build a team.',
     cards: [
@@ -288,7 +359,7 @@ export const slides = [
   {
     id: 'vgrg-2',
     section: 'vgrg',
-    kicker: '05  ·  VG',
+    kicker: '06  ·  VG',
     title: 'Protect people’s wealth.',
     line: 'The client conversation. Security, returns, flexibility.',
     photos: [
@@ -300,7 +371,7 @@ export const slides = [
   {
     id: 'vgrg-3',
     section: 'vgrg',
-    kicker: '05  ·  RG',
+    kicker: '06  ·  RG',
     title: 'Build a team that lasts.',
     line: 'The people path. Partners who want more.',
     photos: [
@@ -312,7 +383,7 @@ export const slides = [
   {
     id: 'earn-1',
     section: 'earn',
-    kicker: '06  ·  How partners earn',
+    kicker: '07  ·  How partners earn',
     title: 'First: your own work.',
     line: 'Paid for the clients you serve.',
     cards: [
@@ -324,7 +395,7 @@ export const slides = [
   {
     id: 'earn-2',
     section: 'earn',
-    kicker: '06  ·  How partners earn',
+    kicker: '07  ·  How partners earn',
     title: 'Then: the people you lead.',
     line: 'Leadership multiplies what you already do well.',
     cards: [
@@ -337,7 +408,7 @@ export const slides = [
   {
     id: 'earn-3',
     section: 'earn',
-    kicker: '06  ·  How partners earn',
+    kicker: '07  ·  How partners earn',
     title: 'Training. System. Support.',
     line: 'Nobody is left alone with the craft.',
     facts: [
@@ -353,7 +424,7 @@ export const slides = [
   {
     id: 'fragen-1',
     section: 'fragen',
-    kicker: '07  ·  Fragen',
+    kicker: '08  ·  Fragen',
     title: 'Your turn. Ask anything.',
     line: 'No script from here. Just honesty.',
     photos: [
@@ -365,7 +436,7 @@ export const slides = [
   {
     id: 'fragen-2',
     section: 'fragen',
-    kicker: '07  ·  Fragen',
+    kicker: '08  ·  Fragen',
     title: 'Shall we start together?',
     line: 'The next step is yours.',
     photos: [

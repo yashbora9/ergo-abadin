@@ -3,6 +3,7 @@ import gsap from 'gsap';
 import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
 import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
 import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
+import { galleryLayout, SUCCESS_QUESTIONS } from './slides.js';
 
 const ACCENT = 0x7a2042;
 const CREAM = 0xf4e4d4;
@@ -101,6 +102,37 @@ const ROOMS = {
     bloom: 0.07,
     spin: 0.022,
     cssBg: '#e6d5c5',
+  },
+  success: {
+    bg: 0xf3e4d0,
+    fog: 0xf0ddc8,
+    fogNear: 14,
+    fogFar: 38,
+    ambient: 0xf6ead8,
+    ambientI: 0.88,
+    keyI: 1.38,
+    keyPos: [2, 8, 6],
+    rim: 0xd4a060,
+    rimI: 1.35,
+    rimPos: [-7, 3, -3],
+    fill: 0xe8b070,
+    fillI: 6.4,
+    ground: 0xe0b888,
+    groundI: 5.4,
+    floor: 0xf0d4b4,
+    floorOp: 0.26,
+    sky: 0xfaeee0,
+    particles: 0xe8c8a0,
+    particleOp: 0.52,
+    pSize: 0.03,
+    pScale: 1.22,
+    dust: 0xd4a060,
+    trailA: 0xd4a060,
+    trailB: ACCENT,
+    exposure: 1.14,
+    bloom: 0.16,
+    spin: 0.008,
+    cssBg: '#f3e4d0',
   },
   opp: {
     bg: 0xc8d0d8,
@@ -692,6 +724,12 @@ export function createWorld(canvas) {
   }
 
   const slideGroups = [];
+  const galleryGroup = new THREE.Group();
+  galleryGroup.visible = false;
+  scene.add(galleryGroup);
+  let galleryFocus = null;
+  let galleryPick = null;
+
   let composer = null;
   let bloomPass = null;
   let useBloom = !mobile && !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -710,7 +748,24 @@ export function createWorld(canvas) {
   async function buildSlides(slides) {
     const urls = new Set();
     slides.forEach((s) => (s.photos || []).forEach((ph) => urls.add(ph.src)));
+    const layout = galleryLayout();
+    SUCCESS_QUESTIONS.forEach((q) => {
+      urls.add(`${import.meta.env.BASE_URL}photos/success/${q.photo}`);
+    });
     await Promise.all([...urls].map(loadTex));
+
+    for (let i = 0; i < layout.length; i++) {
+      const src = `${import.meta.env.BASE_URL}photos/success/${SUCCESS_QUESTIONS[i].photo}`;
+      const tex = await texCache.get(src);
+      const mesh = makePhotoMesh(tex, 1.62, 2.16);
+      const rest = layout[i];
+      mesh.position.set(rest.x, rest.y, rest.z);
+      mesh.rotation.y = rest.ry;
+      mesh.userData.rest = { ...rest };
+      mesh.userData.phase = i * 0.4;
+      mesh.userData.galleryIndex = i;
+      galleryGroup.add(mesh);
+    }
 
     for (const slide of slides) {
       const g = new THREE.Group();
@@ -850,26 +905,91 @@ export function createWorld(canvas) {
     fillTrail(trailB, from, to, 0.22);
   }
 
-  function setSlide(index, { reduced = false, section = 'open' } = {}) {
+  function lightGallery(focusIndex, { reduced = false, lit = false } = {}) {
+    galleryGroup.children.forEach((m) => {
+      const i = m.userData.galleryIndex;
+      const on = lit || focusIndex === i;
+      const intro = focusIndex == null || focusIndex < 0;
+      const rest = m.userData.rest;
+      const targetOp = lit ? 1 : on ? 1 : intro ? 0.42 : 0.18;
+      if (m.userData.mat) {
+        gsap.killTweensOf(m.userData.mat);
+        gsap.to(m.userData.mat, { opacity: targetOp, duration: reduced ? 0.01 : 0.7, ease: 'power2.out' });
+      }
+      if (m.userData.glow) {
+        gsap.to(m.userData.glow.material, {
+          opacity: on || lit ? 0.28 : 0.04,
+          duration: reduced ? 0.01 : 0.7,
+        });
+      }
+      if (m.userData.frame) {
+        gsap.to(m.userData.frame.material, {
+          emissiveIntensity: on || lit ? 0.55 : 0.12,
+          duration: reduced ? 0.01 : 0.7,
+        });
+      }
+      const zPush = on && !lit ? 0.55 : 0;
+      gsap.to(m.position, {
+        x: rest.x,
+        y: rest.y,
+        z: rest.z + zPush,
+        duration: reduced ? 0.01 : 0.85,
+        ease: 'power3.out',
+      });
+      gsap.to(m.scale, {
+        x: on && !intro ? 1.08 : 1,
+        y: on && !intro ? 1.08 : 1,
+        z: 1,
+        duration: reduced ? 0.01 : 0.85,
+        ease: 'power3.out',
+      });
+      m.userData.restLive = { x: rest.x, y: rest.y, z: rest.z + zPush, ry: rest.ry };
+    });
+  }
+
+  function showGallery(on) {
+    galleryGroup.visible = on;
+  }
+
+  function setSlide(index, { reduced = false, section = 'open', gallery, galleryLit = false } = {}) {
     if (focused) closeFocus({ instant: true });
     applyRoom(section, reduced);
+    const inGallery = gallery !== undefined && gallery !== null;
+    showGallery(inGallery);
+    if (inGallery) {
+      galleryFocus = gallery;
+      lightGallery(gallery, { reduced, lit: galleryLit });
+    } else {
+      galleryFocus = null;
+    }
     if (index === current) return;
     const prev = current;
     hover = null;
-    if (prev >= 0) fadeGroup(slideGroups[prev], false);
+    if (prev >= 0 && slideGroups[prev]?.children.length) fadeGroup(slideGroups[prev], false);
     current = index;
     const g = slideGroups[index];
-    if (g) fadeGroup(g, true, reduced ? 0 : 0.25);
+    if (g && g.children.length) fadeGroup(g, true, reduced ? 0 : 0.25);
+  }
+
+  function pickFrom(group) {
+    if (!group || !group.visible) return null;
+    raycaster.setFromCamera(pointer, camera);
+    const hits = raycaster.intersectObjects(group.children, true);
+    if (!hits.length) return null;
+    let obj = hits[0].object;
+    while (obj && obj !== group) {
+      if (obj.userData && obj.userData.mat) return obj;
+      obj = obj.parent;
+    }
+    return null;
   }
 
   function pickMesh() {
-    const g = slideGroups[current];
-    if (!g) return null;
-    raycaster.setFromCamera(pointer, camera);
-    const hits = raycaster.intersectObjects(g.children, true);
-    if (!hits.length) return null;
-    const parent = hits[0].object.parent;
-    return parent && parent.userData.mat ? parent : null;
+    return pickFrom(slideGroups[current]);
+  }
+
+  function pickGallery() {
+    return pickFrom(galleryGroup);
   }
 
   function openFocus(mesh, reduced = false) {
@@ -973,6 +1093,13 @@ export function createWorld(canvas) {
 
   function onClick() {
     if (focusBusy) return;
+    if (galleryGroup.visible) {
+      const gMesh = pickGallery();
+      if (gMesh && typeof galleryPick === 'function') {
+        galleryPick(gMesh.userData.galleryIndex);
+        return;
+      }
+    }
     const mesh = pickMesh();
     if (focused) {
       if (!mesh || mesh === focused) closeFocus();
@@ -996,6 +1123,8 @@ export function createWorld(canvas) {
       g.scale.setScalar(s);
       g.position.set(0, mobile ? 1.28 : 0, 0);
     });
+    galleryGroup.scale.setScalar(mobile ? 0.52 : s);
+    galleryGroup.position.set(0, mobile ? 1.1 : 0, 0);
   }
 
   function resize(w, h) {
@@ -1016,6 +1145,7 @@ export function createWorld(canvas) {
   }
 
   function dimOthers(active) {
+    if (galleryGroup.visible) return;
     const g = slideGroups[current];
     if (!g) return;
     g.children.forEach((m) => {
@@ -1078,22 +1208,25 @@ export function createWorld(canvas) {
     }
 
     const g = slideGroups[current];
-    raycaster.setFromCamera(pointer, camera);
-    const hits = g ? raycaster.intersectObjects(g.children, true) : [];
-    const next =
-      hits.length && hits[0].object.parent && hits[0].object.parent.userData.mat
-        ? hits[0].object.parent
-        : null;
+    const hoverRoot = galleryGroup.visible ? galleryGroup : g;
+    const next = pickFrom(hoverRoot);
     if (!focused && hover !== next) {
-      if (hover) gsap.to(hover.scale, { x: 1, y: 1, z: 1, duration: 0.45, ease: 'power2.out' });
+      if (hover) {
+        const back = galleryGroup.visible && hover.userData.galleryIndex === galleryFocus ? 1.08 : 1;
+        gsap.to(hover.scale, { x: back, y: back, z: 1, duration: 0.45, ease: 'power2.out' });
+      }
       hover = next;
-      dimOthers(hover);
-      if (hover) gsap.to(hover.scale, { x: 1.06, y: 1.06, z: 1.06, duration: 0.45, ease: 'power2.out' });
+      if (!galleryGroup.visible) dimOthers(hover);
+      if (hover) {
+        const up = galleryGroup.visible && hover.userData.galleryIndex === galleryFocus ? 1.12 : 1.06;
+        gsap.to(hover.scale, { x: up, y: up, z: 1, duration: 0.45, ease: 'power2.out' });
+      }
     }
 
-    if (g) {
-      g.children.forEach((m) => {
-        const rest = m.userData.rest;
+    const idleGroup = galleryGroup.visible ? galleryGroup : g;
+    if (idleGroup) {
+      idleGroup.children.forEach((m) => {
+        const rest = m.userData.restLive || m.userData.rest;
         if (!rest || m.userData.locked) return;
         const ph = m.userData.phase || 0;
         const depth = THREE.MathUtils.clamp(0.05 + (rest.z + 1.2) * 0.1, 0.04, 0.28);
@@ -1131,6 +1264,9 @@ export function createWorld(canvas) {
     resize,
     tick,
     burstTrail,
+    onGalleryPick: (fn) => {
+      galleryPick = fn;
+    },
     onClick,
     closeFocus,
     isFocused: () => !!focused,

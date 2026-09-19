@@ -13,6 +13,9 @@ const els = {
   kicker: document.querySelector('#kicker'),
   title: document.querySelector('#title'),
   line: document.querySelector('#line'),
+  quote: document.querySelector('#quote'),
+  quoteText: document.querySelector('#quoteText'),
+  quoteCite: document.querySelector('#quoteCite'),
   facts: document.querySelector('#facts'),
   meta: document.querySelector('#sectionLabel'),
   count: document.querySelector('#count'),
@@ -57,7 +60,7 @@ function renderHud(slide, first = false) {
   const dur = reduced || first ? 0.01 : 0.55;
   const tl = gsap.timeline();
   if (!first) {
-    tl.to([els.kicker, els.title, els.line, els.facts], {
+    tl.to([els.kicker, els.title, els.line, els.quote, els.facts], {
       opacity: 0,
       y: 12,
       duration: 0.28,
@@ -67,7 +70,16 @@ function renderHud(slide, first = false) {
   tl.add(() => {
     els.kicker.textContent = slide.kicker;
     els.title.textContent = slide.title;
-    els.line.textContent = slide.line;
+    els.line.textContent = slide.line || '';
+    if (slide.quote) {
+      els.quote.hidden = false;
+      els.quoteText.textContent = slide.quote;
+      els.quoteCite.textContent = slide.cite || '';
+    } else {
+      els.quote.hidden = true;
+      els.quoteText.textContent = '';
+      els.quoteCite.textContent = '';
+    }
     renderFacts(slide);
     const sec = sections.find((s) => s.id === slide.section);
     els.meta.textContent = sec ? sec.label : '';
@@ -80,7 +92,7 @@ function renderHud(slide, first = false) {
     els.next.disabled = index === slides.length - 1;
   });
   tl.fromTo(
-    [els.kicker, els.title, els.line, els.facts],
+    [els.kicker, els.title, els.line, els.quote, els.facts],
     { opacity: 0, y: 18 },
     { opacity: 1, y: 0, duration: dur, stagger: 0.05, ease: 'power3.out' },
   );
@@ -140,7 +152,12 @@ function goTo(i, { first = false } = {}) {
   const slide = slides[i];
   renderHud(slide, first);
   moveCamera(slide, slide.trail && !first);
-  world.setSlide(i, { reduced, section: slide.section });
+  world.setSlide(i, {
+    reduced,
+    section: slide.section,
+    gallery: slide.gallery,
+    galleryLit: !!slide.galleryLit,
+  });
   document.getElementById('app')?.classList.remove('is-focus');
 }
 
@@ -159,6 +176,27 @@ const nav = createNav({
 
 els.prev.addEventListener('click', () => nav.go(-1));
 els.next.addEventListener('click', () => nav.go(1));
+
+world.onGalleryPick((n) => {
+  const idx = slides.findIndex((s) => s.id === `success-${n + 1}`);
+  if (idx >= 0) nav.jump(idx);
+});
+
+window.addEventListener(
+  'keydown',
+  (e) => {
+    if (slides[index]?.section !== 'success') return;
+    let n = null;
+    if (e.key === '0') n = 10;
+    else if (/^[1-9]$/.test(e.key)) n = Number(e.key);
+    if (n == null) return;
+    e.preventDefault();
+    e.stopImmediatePropagation();
+    const idx = slides.findIndex((s) => s.id === `success-${n}`);
+    if (idx >= 0) nav.jump(idx);
+  },
+  true,
+);
 
 window.addEventListener('click', (e) => {
   if (e.target.closest('.nav-btn, .ticks, .chrome, .progress, .hint')) return;

@@ -56,6 +56,14 @@ html, body, #app {
     linear-gradient(180deg, transparent 42%, rgba(200, 168, 140, 0.28) 100%);
 }
 
+#app[data-room='success'] .vignette {
+  filter: saturate(1.08) contrast(1.03) brightness(1.06);
+  background:
+    radial-gradient(115% 90% at 70% 42%, transparent 12%, rgba(232, 196, 140, 0.22) 68%, rgba(212, 160, 96, 0.38) 100%),
+    linear-gradient(90deg, rgba(243, 228, 208, 0.9) 0%, rgba(243, 228, 208, 0.32) 28%, transparent 52%),
+    linear-gradient(180deg, transparent 42%, rgba(212, 168, 104, 0.28) 100%);
+}
+
 #app[data-room='opp'] .vignette {
   filter: saturate(0.35) contrast(1.08) brightness(1.06);
   background:
@@ -214,7 +222,7 @@ html, body, #app {
   font-size: clamp(2.4rem, 5.6vw, 5.1rem);
   line-height: 1.08;
   letter-spacing: -0.035em;
-  max-width: 12ch;
+  max-width: 16ch;
   white-space: pre-line;
   text-wrap: balance;
   color: var(--accent);
@@ -226,6 +234,34 @@ html, body, #app {
   color: var(--muted);
   max-width: 36ch;
   line-height: 1.5;
+}
+
+.line:empty {
+  display: none;
+}
+
+.quote {
+  margin-top: 20px;
+  max-width: 38ch;
+  border-left: 1px solid var(--accent);
+  padding: 0 0 0 14px;
+}
+
+.quote p {
+  font-size: clamp(0.95rem, 1.35vw, 1.12rem);
+  line-height: 1.5;
+  color: var(--ink);
+  font-style: italic;
+}
+
+.quote cite {
+  display: block;
+  margin-top: 10px;
+  font-style: normal;
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--accent);
 }
 
 .facts {
